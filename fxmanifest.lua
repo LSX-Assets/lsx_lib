@@ -5,7 +5,7 @@ rdr3_warning 'I acknowledge that this is a prerelease build of RedM, and I am aw
 use_experimental_fxv2_oal 'yes'
 name         'lsx_lib'
 author       'LSX Assets'
-version      '1.0.0'
+version      '1.0.1'
 description  'The shared library behind LSX Assets scripts: bridges, UI and Script Studio.'
 
 lsx_lib 'scriptConfig'
