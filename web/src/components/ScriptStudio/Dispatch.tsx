@@ -1,6 +1,7 @@
 import { alpha, Flex, Image, Text, useMantineTheme } from '@mantine/core';
 import { AnimatePresence, motion } from 'framer-motion';
-import { isEnvBrowser, lsxBrand, openLink } from 'lsx-ui';
+import { isEnvBrowser, openLink } from 'dirk-cfx-react';
+import { lsxBrand } from '../../theme/lsx';
 import { X } from 'lucide-react';
 import { useMemo, useState } from 'react';
 import { ChangelogModal } from './ChangelogPage';
@@ -107,24 +108,25 @@ const SIZE = {
  */
 const MOCK: DispatchEntry[] = [
   {
-    id: 'lsx-store',
+    id: 'bench-bolingbroke',
     kind: 'promo',
-    title: 'MLOs and assets built for Los Santos',
-    body: 'Interiors, exteriors and props that drop into the map and look like they were always there.',
-    action: { label: 'Visit the store', url: 'https://lsxassets.com' },
+    title: 'Bolingbroke, rebuilt',
+    body: 'The prison, rebuilt from the ground up. Follow the build as it happens in our Discord.',
+    action: { label: 'Follow on Discord', url: 'https://discord.gg/SutFab8d7P' },
+    chip: 'In progress',
     banner: 'mock',
-    bannerKicker: 'LSX Assets',
-    bannerWord: 'BUILT FOR\nLOS SANTOS',
+    bannerKicker: 'On the bench',
+    bannerWord: 'BOLING\nBROKE',
     pin: true,
     featured: true,
   },
   {
-    id: 'studio-launch',
+    id: 'lsx-lib-100',
     kind: 'update',
-    title: 'Script Studio is here',
-    body: 'Every LSX script now shares one settings panel — search across all of them, one save bar, one change history. Your old per-script panels still work.',
+    title: 'lsx_lib 1.0 is out',
+    body: 'The shared library behind every LSX script: bridges for your framework, inventory and target, and this panel to set them all up.',
     action: { label: 'Read the changelog', changelog: 'lsx_lib' },
-    stamp: '25 Aug',
+    stamp: '4 Oct',
     resource: 'lsx_lib',
   },
   {
@@ -213,7 +215,8 @@ function usePublicFeed(): DispatchEntry[] {
   }, [data, scripts]);
 }
 
-export function Dispatch() {
+/** `empty` is shown instead of nothing when there is no news. */
+export function Dispatch({ empty }: { empty?: React.ReactNode } = {}) {
   const t = useChrome();
   const [dismissed, setDismissed] = useState<string[]>(readDismissed);
   const [session, setSession] = useState<string[]>([]);
@@ -249,7 +252,7 @@ export function Dispatch() {
     writeDismissed(next);
   };
 
-  if (shown.length === 0) return null;
+  if (shown.length === 0) return <>{empty ?? null}</>;
 
   /**
    * Three at a time, and the next one steps up as you clear them.

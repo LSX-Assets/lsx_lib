@@ -1,5 +1,5 @@
-import { createScriptConfig, fetchNui } from "lsx-ui";
-import type { ScriptConfigHistoryRequest, ScriptConfigHistoryResponse } from "lsx-ui";
+import { createScriptConfig, fetchNui } from 'dirk-cfx-react';
+import type { ScriptConfigHistoryRequest, ScriptConfigHistoryResponse } from 'dirk-cfx-react';
 
 export type AppearanceSettings = {
   primaryColor: string;
@@ -107,19 +107,19 @@ export const defaultScriptConfig: ScriptConfig = {
     debug: false,
   },
   appearance: {
-    primaryColor: "lsx",
+    primaryColor: "custom",
     primaryShade: 5,
     customTheme: [
-      "#f8edff",
-      "#e9d9f6",
-      "#d0b2e8",
-      "#b588da",
-      "#9e65cf",
-      "#914ec8",
-      "#8a43c6",
-      "#7734af",
-      "#692d9d",
-      "#5c258b",
+      "#EAFCF2",
+      "#D2F8E3",
+      "#ABF1CB",
+      "#82EAB0",
+      "#63E59B",
+      "#48E287",
+      "#1FBA83",
+      "#12A882",
+      "#039482",
+      "#027A6B",
     ],
   },
   bridging: {

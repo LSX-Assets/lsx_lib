@@ -49,9 +49,9 @@ defaults for servers moving over, and the console reminds you while any are
 set:
 
 ```cfg
-# Theme for every LSX UI. 'lsx' is the LSX green; 'custom' uses the custom
-# palette set in the panel. Shades run 0 (lightest) to 9 (darkest); 5 is the brand green.
-setr lsx_lib:primaryColor lsx
+# Theme for every LSX UI. 'custom' is the palette set in the panel, which
+# ships as the LSX green. Shades run 0 (lightest) to 9 (darkest); 5 is the brand green.
+setr lsx_lib:primaryColor custom
 setr lsx_lib:primaryShade 5
 
 setr lsx_lib:language en
@@ -120,7 +120,8 @@ lsx_lib 'scriptConfig' -- only if the resource ships a schema.json for Script St
 `lib.onSettings(key | keys, cb, options?)` fires whenever the named keys on
 `lib.settings` change. lsx_lib broadcasts every Script Studio change;
 consumers update their local `lib.settings` in place and forward the patch to
-their NUI as `UPDATE_LSX_LIB_SETTINGS`.
+their NUI as `UPDATE_DIRK_LIB_SETTINGS`, the message dirk-cfx-react's
+`DirkProvider` listens for.
 
 ```lua
 lib.onSettings('currency', function(new, old)
@@ -145,8 +146,8 @@ load in different VMs but share module code, so a missing field in
 
 ### Building the UI
 
-The NUI is React + Mantine in `web/`. Its UI kit (theme, fonts, shared
-components) lives in `web/src/lsx-ui` and is imported as `lsx-ui`.
+The NUI is React + Mantine in `web/`, built on the
+[dirk-cfx-react](https://www.npmjs.com/package/dirk-cfx-react) UI kit.
 
 ```sh
 cd web
@@ -157,8 +158,11 @@ pnpm build   # writes web/build, which the resource loads
 
 The colours, type and shapes follow the LSX brand: green-black surfaces,
 Chakra Petch headings, IBM Plex Sans text, JetBrains Mono for numbers, square
-corners with a 45° chamfer, and the teal-to-volt X gradient. The tokens are
-`lsxBrand`, `lsxPalette` and `lsxDark` in `web/src/lsx-ui/theme.ts`.
+corners with a 45° chamfer, and the teal-to-volt X gradient. They live in
+`web/src/theme/lsx.ts` (`lsxBrand`, `lsxPalette`, `lsxDark` and the
+`lsxThemeOverride` handed to `DirkProvider`) and `web/src/fonts/lsx.css`. The
+fonts are bundled, and that stylesheet also points the kit's own font names at
+them, so its components match.
 
 ## Releases
 

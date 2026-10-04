@@ -1,5 +1,5 @@
 import { alpha, Flex, Text, useMantineTheme } from '@mantine/core';
-import { isEnvBrowser } from 'lsx-ui';
+import { isEnvBrowser } from 'dirk-cfx-react';
 import { studioRequest } from './studioRequest';
 import { AnimatePresence, motion } from 'framer-motion';
 import { CheckCircle2, Loader2, XCircle } from 'lucide-react';

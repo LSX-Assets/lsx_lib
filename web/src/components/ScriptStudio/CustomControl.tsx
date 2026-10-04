@@ -1,7 +1,7 @@
 import { singular } from './ui';
 import * as mantine from '@mantine/core';
 import { alpha, Flex, Text, useMantineTheme } from '@mantine/core';
-import * as cfxReact from 'lsx-ui';
+import * as cfxReact from 'dirk-cfx-react';
 import { PANE_HEIGHT, PANE_MIN_HEIGHT } from './Controls';
 import { RowModal } from './RowModal';
 import { useStudio } from './store';
@@ -9,7 +9,7 @@ import { notify } from './Toasts';
 import type { SettingEntry } from './types';
 import { translate, useActiveLanguage, useBundles } from './studioLocale';
 import { newRow } from './newRow';
-import { copyToClipboard, fetchNui, isEnvBrowser } from 'lsx-ui';
+import { copyToClipboard, fetchNui, isEnvBrowser } from 'dirk-cfx-react';
 import * as motion from 'framer-motion';
 import { motion as m } from 'framer-motion';
 import * as leaflet from 'leaflet';
@@ -70,7 +70,7 @@ function sharedDeps() {
     mantine,
     '@mantine/core': mantine,
     cfxReact,
-    'lsx-ui': cfxReact,
+    'dirk-cfx-react': cfxReact,
     lucide,
     'lucide-react': lucide,
     motion,

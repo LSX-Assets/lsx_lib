@@ -164,7 +164,7 @@ end
     end)
   end)
 
-  -- ── lsx-ui's admin tools ────────────────────────────────────
+  -- ── dirk-cfx-react's admin tools ────────────────────────────────────
   --
   -- ONE router, and it is not this file.
   --
@@ -184,7 +184,7 @@ end
 
   -- World position, for any coordinate control in the panel.
   --
-  -- lsx-ui's Vector4 buttons call these BY NAME with no resource
+  -- dirk-cfx-react's Vector4 buttons call these BY NAME with no resource
   -- scope - every script that has an admin panel registers its own pair. The
   -- Studio is lsx_lib's own page, so `fetchNui` posts here: without these the
   -- Goto and Set buttons post into nothing and silently do nothing, which is

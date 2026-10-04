@@ -1,5 +1,5 @@
 import { alpha, Flex, Text, useMantineTheme } from '@mantine/core';
-import { fetchNui, isEnvBrowser } from 'lsx-ui';
+import { fetchNui, isEnvBrowser } from 'dirk-cfx-react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { Check, Minus, Play, TriangleAlert, X } from 'lucide-react';
 import { useCallback, useEffect, useRef, useState } from 'react';
@@ -41,13 +41,13 @@ const MOCK: Result = {
     { name: 'inventory: metadata survives a write', status: 'pass', ms: 14 },
     { name: 'inventory: canCarry respects weight', status: 'pass', ms: 9 },
     { name: 'inventory: usable item fires its handler', status: 'fail', ms: 21, err: 'expected handler to receive slot, got nil' },
-    { name: 'levels: xp curve reaches 60', status: 'pass', ms: 3 },
+    { name: 'framework: player loads with a job', status: 'pass', ms: 6 },
+    { name: 'framework: money adds and removes', status: 'pass', ms: 5 },
+    { name: 'callback: round trip under a second', status: 'pass', ms: 41 },
+    { name: 'locale: missing key falls back to English', status: 'pass', ms: 2 },
     { name: 'levels: level from xp is stable', status: 'pass', ms: 2 },
-    { name: 'economy: sale price uses weight', status: 'pass', ms: 4 },
-    { name: 'economy: fillet bonus applies once', status: 'pass', ms: 4 },
-    { name: 'economy: bait sale rounds down', status: 'pass', ms: 3 },
-    { name: 'traps: needs a player nearby', status: 'skip', reason: 'no player online' },
-    { name: 'traps: stale pots clear', status: 'skip', reason: 'no player online' },
+    { name: 'groups: invite reaches a nearby player', status: 'skip', reason: 'no player online' },
+    { name: 'groups: leaving hands over the lead', status: 'skip', reason: 'no player online' },
   ],
 };
 

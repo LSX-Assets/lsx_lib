@@ -1,5 +1,5 @@
 import { alpha, Flex, Text, TextInput, useMantineTheme } from '@mantine/core';
-import { fetchNui, resolveItemLabel, useItems } from 'lsx-ui';
+import { fetchNui, resolveItemLabel, useItems } from 'dirk-cfx-react';
 import { Gift, Link2 } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { useState } from 'react';

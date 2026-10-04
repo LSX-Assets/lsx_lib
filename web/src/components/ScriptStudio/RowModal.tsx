@@ -1,5 +1,5 @@
 import { alpha, Flex, Text, useMantineTheme } from '@mantine/core';
-import { ConfirmModal, Modal } from 'lsx-ui';
+import { ConfirmModal, Modal } from 'dirk-cfx-react';
 import { AnimatePresence, motion } from 'framer-motion';
 import {
   Activity, Gift, Info, Layers, Leaf, List, Package, Plus, Trash2, TriangleAlert,

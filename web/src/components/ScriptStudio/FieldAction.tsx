@@ -1,5 +1,5 @@
 import { alpha, Text, useMantineTheme } from '@mantine/core';
-import { isEnvBrowser } from 'lsx-ui';
+import { isEnvBrowser } from 'dirk-cfx-react';
 import { Loader2 } from 'lucide-react';
 import { useState } from 'react';
 import { Icon } from './Icon';

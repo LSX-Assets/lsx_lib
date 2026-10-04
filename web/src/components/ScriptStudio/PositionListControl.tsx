@@ -2,7 +2,7 @@ import { alpha, Flex, Text, useMantineTheme } from '@mantine/core';
 import {
   ConfirmModal, Vector4DeleteButton, Vector4Display, WorldPositionPicker,
   type Vector4Value,
-} from 'lsx-ui';
+} from 'dirk-cfx-react';
 import { AnimatePresence } from 'framer-motion';
 import { Plus } from 'lucide-react';
 import { useState } from 'react';

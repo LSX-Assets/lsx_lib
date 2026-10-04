@@ -2,7 +2,7 @@ import { Flex, Text, useMantineTheme, alpha } from '@mantine/core';
 import { motion } from 'framer-motion';
 import { Box, Crosshair, MapPin } from 'lucide-react';
 import { useState } from 'react';
-import { fetchNui, useAdminToolStore } from 'lsx-ui';
+import { fetchNui, useAdminToolStore } from 'dirk-cfx-react';
 import { useChrome } from './studioLocale';
 
 /**

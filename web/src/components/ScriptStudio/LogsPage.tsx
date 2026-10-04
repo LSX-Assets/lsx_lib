@@ -19,7 +19,7 @@ import { SettingControl } from './Controls';
 import type { SettingEntry } from './types';
 import { Chip, StudioButton } from './ui';
 import { useChrome } from './studioLocale';
-import { copyToClipboard } from 'lsx-ui';
+import { copyToClipboard } from 'dirk-cfx-react';
 
 /**
  * Everything that happened, in one place.

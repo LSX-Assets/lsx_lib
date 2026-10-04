@@ -1,11 +1,11 @@
 import { alpha, Flex, Text, TextInput, useMantineTheme } from '@mantine/core';
-import { ConfirmModal } from 'lsx-ui';
+import { ConfirmModal } from 'dirk-cfx-react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { List, Package, Pencil, Plus, Search, Trash2, X } from 'lucide-react';
 import { useEffect, useMemo, useState } from 'react';
 import { useStudio } from './store';
 import { RowModal } from './RowModal';
-import { useItems } from 'lsx-ui';
+import { useItems } from 'dirk-cfx-react';
 import { ItemArt, singular, StudioButton } from './ui';
 import type { SettingColumn, SettingEntry } from './types';
 import { useChrome } from './studioLocale';

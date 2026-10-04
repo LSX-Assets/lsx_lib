@@ -8,7 +8,7 @@ import {
   AccountSelect, BlipDisplaySelect, ControlMultiSelect, ControlSelect, FiveMKeyBindInput,
   blipUrlForSprite, getBlipColor, getBlipEntry,
   GroupSelect, Vector4Display, WorldPositionPicker, fetchNui, useItems,
-} from 'lsx-ui';
+} from 'dirk-cfx-react';
 import { MeterControl } from './MeterControl';
 import { RangeControl, SliderControl } from './RichControls';
 import { Icon } from './Icon';
@@ -92,7 +92,7 @@ export function useInputStyles(compact?: boolean) {
 /**
  * The same input look, as CSS variables.
  *
- * A few of lsx-ui's inputs have closed prop types and accept no
+ * A few of dirk-cfx-react's inputs have closed prop types and accept no
  * `styles` at all - GroupSelect among them - so they came out looking like a
  * different product from the field above them. Rather than eyeball a matching
  * colour in CSS, the panel publishes the values it is already using and the
@@ -596,7 +596,7 @@ export function SettingControl({ type, value, onChange, entry, column, disabled,
             onChange={(next) => onChange(next)}
             disabled={disabled}
             // No comboboxProps here: AccountSelect's props are a closed union
-            // in lsx-ui, so its dropdown is raised by the
+            // in dirk-cfx-react, so its dropdown is raised by the
             // .mantine-Combobox-dropdown rule in index.css instead.
             style={{ flex: 1 }}
             styles={styles}
@@ -789,7 +789,7 @@ export function SettingControl({ type, value, onChange, entry, column, disabled,
       );
 
     case 'keybind': {
-      // lsx-ui owns the key catalogue and the { _type, _key } shape -
+      // dirk-cfx-react owns the key catalogue and the { _type, _key } shape -
       // this is a keybind primary key, NOT a numeric game control id.
       const bind = (value && typeof value === 'object' && '_key' in (value as object))
         ? (value as { _type: string; _key: string })

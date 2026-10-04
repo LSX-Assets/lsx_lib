@@ -1,5 +1,5 @@
 import { Autocomplete } from '@mantine/core';
-import { loadModels, useModels } from 'lsx-ui';
+import { loadModels, useModels } from 'dirk-cfx-react';
 import { useEffect, useMemo } from 'react';
 import { useInputStyles } from './Controls';
 

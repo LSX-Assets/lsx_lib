@@ -581,7 +581,7 @@ if hasUI then
     -- Re-push the current config on every NUI (re)mount. The one-shot init
     -- thread pushes once on first load (it waits on this flag), but a NUI
     -- remount WITHOUT a resource restart would otherwise land on an empty
-    -- store now that LsxProvider no longer does a proactive full fetch.
+    -- store now that DirkProvider no longer does a proactive full fetch.
     -- sendSettingsToNui self-guards on scriptConfig and SendNuiMessage is
     -- local (no net/KVP cost); UPDATE_SCRIPT_CONFIG is idempotent, so the
     -- extra push that overlaps the init thread's first-load push is harmless.

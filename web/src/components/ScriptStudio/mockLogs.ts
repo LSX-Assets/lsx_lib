@@ -72,40 +72,18 @@ const PLAYERS = [
 type EventSpec = { event: string; level?: LogLevel; weight: number; line: (r: () => number, who: string) => string };
 
 const CATALOGUE: Record<string, EventSpec[]> = {
-  example_fishing: [
-    { event: 'fishCaught', weight: 40, line: (r, who) => `${who} caught a ${pick(r, ['Rainbow Trout', 'Sea Bass', 'Mackerel', 'Bluefin Tuna', 'Catfish'])} (${(1 + r() * 34).toFixed(1)}lb) in ${pick(r, ['Tataviam Lake', 'Paleto Cove', 'Del Perro Pier', 'Alamo Sea'])}` },
-    { event: 'fishSold', weight: 16, line: (r, who) => `${who} sold ${2 + Math.floor(r() * 18)}x fish for $${(400 + Math.floor(r() * 3800)).toLocaleString()}` },
-    { event: 'baitSold', weight: 7, line: (r, who) => `${who} sold ${5 + Math.floor(r() * 40)}x bait for $${(40 + Math.floor(r() * 300)).toLocaleString()}` },
-    { event: 'equipmentBought', weight: 9, line: (r, who) => `${who} bought a ${pick(r, ['Carbon Rod', 'Spinning Reel', 'Braided Line', 'Treble Hook', 'Bait Bucket'])} for $${(150 + Math.floor(r() * 2400)).toLocaleString()}` },
-    { event: 'permitBought', weight: 5, line: (r, who) => `${who} bought a fishing permit for $${(2500 + Math.floor(r() * 2000)).toLocaleString()}` },
-    { event: 'crabPotPlaced', weight: 6, line: (_r, who) => `${who} placed a crab pot` },
-    { event: 'crabPotCollected', weight: 6, line: (r, who) => `${who} collected a crab pot (${1 + Math.floor(r() * 6)} items)` },
-    { event: 'dailyChallenge', weight: 4, line: (r, who) => `${who} completed "${pick(r, ['Catch 10 fish', 'Sell $5,000 of fish', 'Land a 30lb catch'])}"` },
-    { event: 'tournament', weight: 2, line: (r, who) => `${who} placed ${pick(r, ['1st', '2nd', '3rd'])} in the Paleto Open` },
-    { event: 'suspiciousSale', level: 'alert', weight: 1, line: (r, who) => `${who} sold a single catch for $${(24000 + Math.floor(r() * 60000)).toLocaleString()} - over the flag threshold` },
-  ],
   lsx_lib: [
-    { event: 'configSaved', weight: 8, line: (r, who) => `${who} saved ${pick(r, ['example_fishing', 'lsx_lib', 'example_phone'])} (${1 + Math.floor(r() * 5)} changes)` },
+    { event: 'configSaved', weight: 10, line: (r, who) => `${who} saved ${pick(r, ['Basic', 'Appearance', 'Bridging', 'Logger', 'Groups'])} (${1 + Math.floor(r() * 5)} changes)` },
+    { event: 'groupCreated', weight: 14, line: (r, who) => `${who} started a group of ${2 + Math.floor(r() * 3)}` },
+    { event: 'groupInvite', weight: 18, line: (r, who) => `${who} invited ${pick(r, ['Kayla Reyes', 'Marcus Webb', 'Ana Petrov', 'Tom Halloway'])} to their group` },
+    { event: 'groupDisbanded', weight: 6, line: (_r, who) => `${who} disbanded their group` },
+    { event: 'languageChanged', weight: 2, line: (r, who) => `${who} switched the panel language to ${pick(r, ['English', 'Deutsch', 'Français', 'Español'])}` },
     { event: 'adminGranted', level: 'warn', weight: 2, line: (r, who) => `${who} granted ${pick(r, ['Kayla Reyes', 'Marcus Webb'])} edit access` },
     { event: 'adminRevoked', level: 'warn', weight: 1, line: (r, who) => `${who} revoked access from ${pick(r, ['Tom Halloway', 'Ana Petrov'])}` },
-    { event: 'bridgeChanged', weight: 2, line: (r, who) => `${who} forced the ${pick(r, ['fuel', 'dispatch', 'target'])} bridge to ${pick(r, ['LegacyFuel', 'ps-dispatch', 'ox_target'])}` },
-    { event: 'configReset', level: 'warn', weight: 1, line: (r, who) => `${who} reset ${pick(r, ['example_fishing', 'example_phone'])} to defaults` },
-  ],
-  example_phone: [
-    { event: 'callPlaced', weight: 14, line: (r, who) => `${who} called ${pick(r, ['555-0142', '555-0198', '555-0110'])} (${10 + Math.floor(r() * 240)}s)` },
-    { event: 'messageSent', weight: 18, line: (r, who) => `${who} messaged ${pick(r, ['555-0142', '555-0198', '555-0110'])}` },
-    { event: 'appInstalled', weight: 3, line: (r, who) => `${who} installed ${pick(r, ['Marketplace', 'Garage', 'Crypto'])}` },
-    { event: 'photoTaken', weight: 6, line: (_r, who) => `${who} took a photo` },
-  ],
-  example_multichar: [
-    { event: 'characterCreated', weight: 5, line: (_r, who) => `${who} created a character` },
-    { event: 'characterSelected', weight: 12, line: (_r, who) => `${who} selected a character` },
-    { event: 'characterDeleted', level: 'warn', weight: 1, line: (_r, who) => `${who} deleted a character` },
-  ],
-  example_cars: [
-    { event: 'vehiclePurchased', weight: 5, line: (r, who) => `${who} bought a ${pick(r, ['Sultan RS', 'Elegy Retro', 'Comet S2'])} for $${(45000 + Math.floor(r() * 400000)).toLocaleString()}` },
-    { event: 'partInstalled', weight: 9, line: (r, who) => `${who} installed a ${pick(r, ['turbo', 'roll cage', 'stage 3 gearbox', 'LSD'])}` },
-    { event: 'dynoRun', weight: 4, line: (r, who) => `${who} ran the dyno - ${(280 + Math.floor(r() * 620))}hp` },
+    { event: 'bridgeChanged', weight: 3, line: (r, who) => `${who} set the ${pick(r, ['fuel', 'dispatch', 'target'])} bridge to ${pick(r, ['ox_fuel', 'ps-dispatch', 'ox_target'])}` },
+    { event: 'discordTest', weight: 2, line: (r, who) => `${who} sent a test message to #${pick(r, ['server-logs', 'staff'])}` },
+    { event: 'configReset', level: 'warn', weight: 1, line: (_r, who) => `${who} reset Logger to defaults` },
+    { event: 'callbackTimeout', level: 'alert', weight: 1, line: (_r, who) => `${who}'s client got no answer from the server - check the anticheat whitelist for __lsx_cb_` },
   ],
 };
 
@@ -113,7 +91,7 @@ function pick<T>(r: () => number, list: T[]): T {
   return list[Math.floor(r() * list.length)]!;
 }
 
-/** ~4,000 rows across five resources, newest first. Built once. */
+/** ~4,000 rows, newest first. Built once. */
 const TABLE: LogRow[] = (() => {
   const r = seeded(20260819);
   const rows: LogRow[] = [];
@@ -225,9 +203,9 @@ export const MOCK_DELIVERY = {
   routes: [
     {
       id: 'r1',
-      label: 'Fishing to #fishing-logs',
+      label: 'Admin changes to #staff',
       enabled: true,
-      resources: ['example_fishing'],
+      resources: ['lsx_lib'],
       sent: 1284,
       dropped: 0,
       queued: 0,

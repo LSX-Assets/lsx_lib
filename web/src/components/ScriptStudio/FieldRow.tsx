@@ -1,5 +1,5 @@
 import { alpha, Flex, Text, Tooltip, useMantineTheme } from '@mantine/core';
-import { resolveItemDescription, resolveItemLabel, useItems } from 'lsx-ui';
+import { resolveItemDescription, resolveItemLabel, useItems } from 'dirk-cfx-react';
 import { Info } from 'lucide-react';
 import { RedirectKindControl } from './RedirectKindControl';
 import { ObjectMapControl } from './ObjectMapControl';

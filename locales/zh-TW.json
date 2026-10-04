@@ -264,7 +264,7 @@
   "sections.groups.description": "lsx_groups 系統的預設值（隊伍邀請、最大成員數、離線踢除）。",
   "sections.discord.description": "lib.discord 用來查詢身分組、成員資料，以及各個 lsx_lib 腳本中所有 Discord 相關功能的機器人憑證。留白即停用 —— 需要它的功能會顯示「請到 /lsx_lib 設定」的提示，而不是默默失效。",
   "sections.logger.description": "所有 lsx_lib 腳本透過 lib.logger 使用的外部日誌後端。它完全在 lsx_lib 自己的 VM 內執行 —— 腳本經由 export 送出，所以後端的機密永遠不會進入腳本的記憶體。把 service 設為 'off' 即停用外部日誌（各資源仍會獨立送出自己的 Discord webhook）。當 service 為 'off' 或未設定時，舊的 `lsx:logger` 與各後端 convar 仍可作為備援。",
-  "settings.appearance.primaryColor.description": "作為介面主色的 Mantine 調色盤名稱。選 'lsx' 即套用下方自訂的調色盤。",
+  "settings.appearance.primaryColor.description": "作為介面主色的 Mantine 調色盤名稱。選 'custom' 即套用下方自訂的調色盤。",
   "settings.bridging.framework.label": "框架",
   "settings.bridging.framework.description": "lsx_lib 讀取玩家資料所用的伺服器框架。",
   "settings.bridging.inventory.label": "背包",

@@ -86,7 +86,7 @@ export const MOCK_ADMINS: AdminEntry[] = [
   },
   {
     id: 'db-1', name: 'Kayla', identifier: 'license2:44de91b0aa',
-    source: 'panel', level: 'edit', scripts: ['example_fishing'],
+    source: 'panel', level: 'edit', scripts: ['lsx_lib'],
     addedBy: 'Alex', addedAt: '2026-08-14', online: true,
   },
   {
@@ -96,7 +96,7 @@ export const MOCK_ADMINS: AdminEntry[] = [
   },
   {
     id: 'db-3', name: 'Sam', identifier: 'license2:1cc409ba55',
-    source: 'panel', level: 'edit', scripts: ['example_fishing', 'lsx_lib'],
+    source: 'panel', level: 'edit', scripts: ['lsx_lib'],
     addedBy: 'Kayla', addedAt: '2026-07-28', online: false,
   },
 ];

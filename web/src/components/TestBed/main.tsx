@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { TestBed as SharedTestBed, type TestBedItem, useNuiEvent } from "lsx-ui";
+import { TestBed as SharedTestBed, type TestBedItem, useNuiEvent } from 'dirk-cfx-react';
 import { isEnvBrowser } from "../../utils/misc";
 import { internalEvent } from "../../utils/internalEvent";
 import { fetchNui } from "../../utils/fetchNui";

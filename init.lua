@@ -169,7 +169,7 @@ end
 --
 -- Registering them here means the handlers live in lsx_lib's code but get
 -- registered in each consumer's resource scope (because this file runs in
--- the consumer's runtime via '@lsx_lib/init.lua'). lsx-ui's
+-- the consumer's runtime via '@lsx_lib/init.lua'). dirk-cfx-react's
 -- useSettings + localeStore now work out of the box for every consumer
 -- with a ui_page.
 if context == 'client' and (GetNumResourceMetadata(cache.resource, 'ui_page') or 0) > 0 then

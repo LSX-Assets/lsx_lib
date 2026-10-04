@@ -1,5 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { fetchNui, isEnvBrowser } from 'lsx-ui';
+import { fetchNui, isEnvBrowser } from 'dirk-cfx-react';
 import { MOCK_ACE_GRANTS, MOCK_ADMINS, MOCK_ONLINE, type AdminLevel } from './mockAdmins';
 import { notify } from './Toasts';
 

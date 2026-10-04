@@ -1,11 +1,11 @@
 import { alpha, Flex, Text, useMantineTheme } from '@mantine/core';
-import { FiveMKeyBindInput } from 'lsx-ui';
+import { FiveMKeyBindInput } from 'dirk-cfx-react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { Check, KeyRound, Pencil, X } from 'lucide-react';
 import { useState } from 'react';
 import { useChrome } from './studioLocale';
 
-/** lsx-ui's keybind shape. */
+/** dirk-cfx-react's keybind shape. */
 type Binding = { _type: string; _key: string };
 type Action = { main: Binding; alt?: Binding };
 type Bindings = Record<string, Action>;

@@ -5,7 +5,7 @@
 --
 -- The curve was written FIVE times: fishing's `src/shared/skill.lua`, a second
 -- one in its server that is a DIFFERENT formula, two hand copies in its admin
--- React, and `createSkill` in lsx-ui. The two Lua ones disagree — at
+-- React, and `createSkill` in dirk-cfx-react. The two Lua ones disagree — at
 -- 8,134 XP fishing's gates say level 24 and its own `getLevel` export says 99.
 -- That is what happens to arithmetic nobody owns.
 --

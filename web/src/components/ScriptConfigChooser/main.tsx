@@ -1,5 +1,5 @@
 import { alpha, Flex, Text, Tooltip, useMantineTheme } from '@mantine/core';
-import { Title } from 'lsx-ui';
+import { Title } from 'dirk-cfx-react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { Settings, X } from 'lucide-react';
 import { useEffect, useMemo, useState } from 'react';

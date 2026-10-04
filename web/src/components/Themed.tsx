@@ -2,11 +2,11 @@
  * One element, wearing the calling script's colours.
  *
  * lsx_lib draws every shared UI on ITS OWN page, so until now everything on it
- * wore lsx_lib's theme — an example_cars dialogue came up in lsx_lib's green
- * whatever colours example_cars had been given. The fix is not to repaint the
- * page, because two scripts can have something on screen at once: a fishing
- * notification over an example_cars dialogue has to be two colours at the same
- * time.
+ * wore lsx_lib's theme — one script's dialogue came up in lsx_lib's green
+ * whatever colours that script had been given. The fix is not to repaint the
+ * page, because two scripts can have something on screen at once: one
+ * script's notification over another's dialogue has to be two colours at the
+ * same time.
  *
  * So the scope is the ELEMENT, not the page.
  *
@@ -28,6 +28,7 @@
 import { MantineProvider, useMantineTheme } from "@mantine/core";
 import type { MantineColorsTuple } from "@mantine/core";
 import { useId, useMemo } from "react";
+import { lsxPalette } from "../theme/lsx";
 
 /**
  * A ten-stop palette, or not.
@@ -67,8 +68,8 @@ export default function Themed({ theme, children }: {
     // palette I configured was ignored".
     if (isPalette(theme.customTheme)) {
       colors.custom = theme.customTheme;
-    } else if (!colors.custom && isPalette(colors.lsx)) {
-      colors.custom = colors.lsx;
+    } else if (!colors.custom) {
+      colors.custom = [...lsxPalette] as unknown as MantineColorsTuple;
     }
 
     return {

@@ -3,7 +3,7 @@ import {
   Modal, WorldPositionPicker, blipUrlForSprite, getBlipColor, getBlipEntry,
   isEnvBrowser, loadModels, useItems, useModels,
   type Vector4Value,
-} from 'lsx-ui';
+} from 'dirk-cfx-react';
 import { useVirtualizer } from '@tanstack/react-virtual';
 import { PedArt } from './pedArt';
 import { IconPicker } from './IconPicker';
@@ -11,7 +11,7 @@ import { IconPicker } from './IconPicker';
 /**
  * The real catalogues, discovered rather than hardcoded.
  *
- * lsx-ui resolves a blip colour or sprite BY ID; it exports no list.
+ * dirk-cfx-react resolves a blip colour or sprite BY ID; it exports no list.
  * Walking the id space once and keeping whatever resolves gives the full set
  * without a copy of it living here to fall out of date - which is exactly how
  * this panel ended up offering ten colours out of eighty-odd.
@@ -724,7 +724,7 @@ const PICKER_META: Partial<Record<ControlType, { icon: React.ElementType; title:
 
 /** Types that open PickerDrawer rather than editing inline. */
 export function opensPicker(type: ControlType): boolean {
-  // keybind and control edit inline through lsx-ui's own inputs, so
+  // keybind and control edit inline through dirk-cfx-react's own inputs, so
   // they deliberately do not open a sub-view.
   //
   // The blips DO. Their controls draw a picker button and hand `onDrill` up,

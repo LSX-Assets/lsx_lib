@@ -1,16 +1,13 @@
 import { Flex } from '@mantine/core';
 import '@mantine/dates/styles.css';
-import { LsxProvider, copyToClipboard } from 'lsx-ui';
+import { DirkProvider, copyToClipboard } from 'dirk-cfx-react';
+import { lsxThemeOverride } from '../theme/lsx';
 import { motion } from 'framer-motion';
 import React from "react";
 import { useNuiEvent } from '../hooks/useNuiEvent';
 import { fetchNui } from '../utils/fetchNui';
 import { imageUrlToBase64 } from '../utils/misc';
 import { useScriptConfigHooks } from '../stores/useScriptConfig';
-// Legacy per-script panel. Every script's settings live in Script Studio now
-// and /<resourceName> deep-links into it, so nothing reaches this any more.
-// Kept in the tree until the fishing one goes the same way, then both delete.
-// import AdminSection from './Admin/main';
 import AlertDialog from './AlertDialog/main';
 import Menu from './Context/main';
 import Dialog from './Dialog/main';
@@ -58,7 +55,7 @@ const App: React.FC = () => {
   });
 
   return (
-    <LsxProvider>
+    <DirkProvider themeOverride={lsxThemeOverride}>
       <TestBed />
 
       {/*
@@ -87,7 +84,7 @@ const App: React.FC = () => {
       <Themed theme={useUiTheme('instructions')}><Instructions /></Themed>
       <ScriptConfigChooser />
       <ScriptStudio />
-    </LsxProvider>
+    </DirkProvider>
   );
 };
 

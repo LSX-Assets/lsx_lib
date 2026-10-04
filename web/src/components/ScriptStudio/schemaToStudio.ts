@@ -937,7 +937,7 @@ function defaultForControl(control: ControlType): unknown {
     case 'keyvalue': case 'keybindMap': case 'groupGrades': return {};
     case 'refs': return [];
     case 'positions': return [];
-    case 'mantineColor': return 'lsx';
+    case 'mantineColor': return 'custom';
     case 'shade': return 5;
     case 'groups': return [];
     case 'tags': case 'rows': case 'peds': return [];
@@ -1056,17 +1056,13 @@ function rowItemKey(columns: SettingColumn[]): string | undefined {
 // ── the walk ────────────────────────────────────────────────────────────────
 
 /**
- * Where an open map's KEYS should be picked from, when we can tell.
- * `baitTypes` names baits, and a script that configures bait has them in a list
- * already - offering those beats free text that has to match exactly.
+ * Where an open map's KEYS should be picked from, when we can tell: a map keyed
+ * by entries of one of the script's own lists can name that list here, so the
+ * control offers those entries instead of free text that has to match exactly.
+ * The control resolves the path against the real entry list at render, so a
+ * script without that list just gets no suggestions. Nothing maps one yet.
  */
-function weightMapSource(key: string): { path: string; key: string } | undefined {
-  // NOT gated on siblingLists: that set only holds top-level ARRAYS, and
-  // fishing's `equipment` is an object holding rods/reel/line/bait/... so the
-  // guard was never true and the bait picker came up empty every time. The
-  // control resolves the path against the real entry list at render, so a
-  // script without `equipment.bait` just gets no suggestions.
-  if (/^baittypes?$/i.test(key)) return { path: 'equipment.bait', key: 'name' };
+function weightMapSource(_key: string): { path: string; key: string } | undefined {
   return undefined;
 }
 

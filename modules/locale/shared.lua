@@ -170,7 +170,7 @@ if lib.onSettings and not IsDuplicityVersion() then
             nuiReady = true
             if pendingDict then
                 SendNuiMessage(json.encode({
-                    action = 'UPDATE_LSX_LIB_LOCALES',
+                    action = 'UPDATE_DIRK_LIB_LOCALES', -- the name dirk-cfx-react's locale store listens for
                     data = pendingDict,
                 }))
                 pendingDict = nil
@@ -187,7 +187,7 @@ if lib.onSettings and not IsDuplicityVersion() then
         if not next(dict) then return end
         if nuiReady then
             SendNuiMessage(json.encode({
-                action = 'UPDATE_LSX_LIB_LOCALES',
+                action = 'UPDATE_DIRK_LIB_LOCALES', -- the name dirk-cfx-react's locale store listens for
                 data = dict,
             }))
         else
@@ -202,7 +202,7 @@ end
 
 
 if not IsDuplicityVersion() then
-  -- The React locale helper (lsx-ui) still pings this callback when a key
+  -- The React locale helper (dirk-cfx-react) still pings this callback when a key
   -- is absent from its store. We ACK and do nothing on purpose: runtime NEVER
   -- writes translations back to disk. Missing keys are filled in by editing the
   -- locale JSON. Kept registered (rather than removed) so the NUI's fetchNui

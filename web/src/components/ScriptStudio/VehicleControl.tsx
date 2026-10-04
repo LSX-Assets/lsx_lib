@@ -1,6 +1,6 @@
 import { alpha, Autocomplete, Flex, Text, useMantineTheme } from '@mantine/core';
 import { X } from 'lucide-react';
-import { fetchNui, type Vehicle } from 'lsx-ui';
+import { fetchNui, type Vehicle } from 'dirk-cfx-react';
 import { useEffect, useMemo, useState } from 'react';
 import { useInputStyles } from './Controls';
 

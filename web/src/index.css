@@ -33,6 +33,24 @@ code {
   width: 100% !important;
 }
 
+/* The LSX input surface. dirk-cfx-react sets these variables with this same
+   single-class selector; this file loads after the kit, so these win, and
+   Mantine's own :focus-within rule (more specific) still swaps the border on
+   focus. */
+.mantine-Input-input {
+  --input-bg: rgba(242, 247, 244, 0.035);
+  --input-bd: rgba(86, 105, 95, 0.55);
+  --input-color: rgba(242, 247, 244, 0.88);
+  --input-height: 4vh;
+}
+
+/* Keyboard focus is the LSX focus ring: 2px of volt, 2px out, on everything. */
+.mantine-focus-auto:focus-visible,
+.mantine-focus-always:focus {
+  outline: 2px solid #F0FB63;
+  outline-offset: 2px;
+}
+
 
 
 /* ── Script Studio ─────────────────────────────────────────────────────────
@@ -90,7 +108,7 @@ code {
  * The panel sits at z-index 9990. Mantine portals a dropdown to <body> with an
  * inline z-index of 300, so any select that does not pass its own
  * comboboxProps opens BEHIND the whole window. Most of ours do pass it - but
- * lsx-ui's AccountSelect takes a closed prop union with no way in, so
+ * dirk-cfx-react's AccountSelect takes a closed prop union with no way in, so
  * the fix cannot live at the call site.
  *
  * !important because the value it beats is an inline style. Nothing in this
@@ -115,7 +133,7 @@ code {
   flex-shrink: 0;
 }
 
-/* Inputs that come from lsx-ui with a closed prop type.
+/* Inputs that come from dirk-cfx-react with a closed prop type.
    They are Mantine underneath but arrive with their own defaults, so without
    this they sit visibly apart from the panel's own fields. The values come
    from the panel itself (see useInputCssVars), never guessed here. */
@@ -168,7 +186,7 @@ code {
    Set `data-shot` on <html> and nothing behind the panel paints, so a capture
    with an alpha channel comes out on genuine transparency.
 
-   The elements are KEPT, only their backgrounds go: cfx-react's LsxProvider
+   The elements are KEPT, only their backgrounds go: cfx-react's DirkProvider
    backdrop is also the layout parent, and the dim overlay is the flex box that
    centres the panel - display:none on either collapses the thing being
    photographed along with it. */
@@ -195,7 +213,7 @@ html[data-shot] div:has(> [data-studio-panel]) {
    omitBackground only skips the browser's own white base — anything still
    PAINTING a background is captured as normal.
 
-   LsxProvider paints a hotlinked backdrop behind everything so browser dev
+   DirkProvider paints a hotlinked backdrop behind everything so browser dev
    looks like the game. Nothing in the panel's own code paints, so that
    backdrop is the one thing standing between us and a clean alpha channel.
 

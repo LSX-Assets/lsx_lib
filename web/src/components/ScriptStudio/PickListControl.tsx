@@ -1,5 +1,5 @@
 import { MultiSelect, Select } from '@mantine/core';
-import { resolveItemLabel, useItems } from 'lsx-ui';
+import { resolveItemLabel, useItems } from 'dirk-cfx-react';
 import { useMemo } from 'react';
 import { useInputStyles } from './Controls';
 import { effectiveValue, useStudio } from './store';

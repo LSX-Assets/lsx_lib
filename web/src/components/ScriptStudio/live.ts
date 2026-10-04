@@ -1,4 +1,4 @@
-import { fetchNui, isEnvBrowser } from 'lsx-ui';
+import { fetchNui, isEnvBrowser } from 'dirk-cfx-react';
 import { schemaToStudio } from './schemaToStudio';
 import { MOCK_SCRIPTS } from './mockData';
 import { useStudio } from './store';

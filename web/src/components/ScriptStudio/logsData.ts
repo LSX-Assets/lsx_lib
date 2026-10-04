@@ -1,5 +1,5 @@
 import { useInfiniteQuery, useQuery } from '@tanstack/react-query';
-import { fetchNui, isEnvBrowser } from 'lsx-ui';
+import { fetchNui, isEnvBrowser } from 'dirk-cfx-react';
 import { fetchLogFacets, fetchLogs, MOCK_DELIVERY, type Facet, type LogPage, type LogQuery } from './mockLogs';
 
 /**

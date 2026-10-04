@@ -1,4 +1,4 @@
-import { fetchNui, isEnvBrowser } from 'lsx-ui';
+import { fetchNui, isEnvBrowser } from 'dirk-cfx-react';
 
 /**
  * Ask a SCRIPT something, from inside lsx_lib's panel.

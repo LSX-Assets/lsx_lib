@@ -126,7 +126,7 @@ if lib.context == 'client' then
       nuiReady = true
       if pendingPatch then
         SendNuiMessage(json.encode({
-          action = 'UPDATE_LSX_LIB_SETTINGS',
+          action = 'UPDATE_DIRK_LIB_SETTINGS', -- the name dirk-cfx-react's DirkProvider listens for
           data = pendingPatch,
         }))
         pendingPatch = nil
@@ -161,7 +161,7 @@ if lib.context == 'client' then
     end
     if nuiReady then
       SendNuiMessage(json.encode({
-        action = 'UPDATE_LSX_LIB_SETTINGS',
+        action = 'UPDATE_DIRK_LIB_SETTINGS', -- the name dirk-cfx-react's DirkProvider listens for
         data = patch,
       }))
     else
@@ -189,14 +189,14 @@ if lib.context == 'client' then
 
     -- Always push the hydrated snapshot to NUI on startup — applySnapshot
     -- only reports keys whose Lua-side value changed, but the NUI's React
-    -- store has its own defaults (e.g. primaryColor="lsx") that stay stale
+    -- store has its own defaults (e.g. primaryColor="dirk") that stay stale
     -- whenever lib.settings happens to already match the server snapshot
     -- (most often when a convar override matches scriptConfig). Live updates
     -- still go through forwardToNui's changed-keys filter below.
     if hasUi then
       if nuiReady then
         SendNuiMessage(json.encode({
-          action = 'UPDATE_LSX_LIB_SETTINGS',
+          action = 'UPDATE_DIRK_LIB_SETTINGS', -- the name dirk-cfx-react's DirkProvider listens for
           data = snapshot,
         }))
       else

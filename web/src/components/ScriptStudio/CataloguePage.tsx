@@ -1,5 +1,5 @@
 import { alpha, Flex, Select, Text, TextInput, useMantineTheme } from '@mantine/core';
-import { fetchNui, getItemImageUrl, useItems, useSettings, type Vehicle } from 'lsx-ui';
+import { fetchNui, getItemImageUrl, useItems, useSettings, type Vehicle } from 'dirk-cfx-react';
 import { AnimatePresence, motion } from 'framer-motion';
 import {
   AlertTriangle, ArrowDown, ArrowUp, ArrowUpDown, Box, Car, Check, ChevronRight,

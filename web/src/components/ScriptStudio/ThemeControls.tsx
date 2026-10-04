@@ -1,11 +1,16 @@
 import { alpha, ColorInput, Flex, Text, useMantineTheme } from '@mantine/core';
 import { generateColors } from '@mantine/colors-generator';
 import { motion } from 'framer-motion';
-import { Check, RefreshCw } from 'lucide-react';
+import { Check, RefreshCw, RotateCcw } from 'lucide-react';
 import { useMemo } from 'react';
 import { effectiveValue, setValue, useStudio } from './store';
 import { StudioButton } from './ui';
 import { useChrome } from './studioLocale';
+import { lsxPalette } from '../../theme/lsx';
+
+/** True while a palette is still the LSX green it ships as. */
+const isLsxPalette = (stops: readonly string[]) =>
+  stops.length === lsxPalette.length && stops.every((c, i) => c.toLowerCase() === lsxPalette[i].toLowerCase());
 
 /**
  * The theme trio lives under a different parent in every script - fishing calls
@@ -40,13 +45,15 @@ function useStops(
 }
 
 /**
- * `theme.primaryColor` is a MANTINE PALETTE NAME - "lsx", "blue", or the
+ * `theme.primaryColor` is a MANTINE PALETTE NAME - "blue", "teal", or the
  * literal "custom" to fall through to the 10-stop customTheme - not a hex
  * value. A colour picker here writes a hex the theme system cannot use, which
  * is what the generic `/colou?r/` inference did before.
  *
+ * The LSX green ships as the custom palette (see theme/lsx.ts for why), so the
+ * custom swatch reads "lsx" for as long as its stops are the LSX ones.
  * Options come from the live Mantine theme, so a palette registered by
- * LsxProvider (including "lsx") shows up without a hardcoded list.
+ * DirkProvider shows up without a hardcoded list.
  */
 export function MantineColorControl({
   value, onChange, disabled, resource, path,
@@ -61,14 +68,15 @@ export function MantineColorControl({
 }) {
   const t = useChrome();
   const theme = useMantineTheme();
-  const current = typeof value === 'string' ? value : 'lsx';
+  const current = typeof value === 'string' ? value : 'custom';
   const isCustom = current === 'custom';
 
   const customPath = sibling(path, 'customTheme');
   const entries = useStudio((state) => state.scripts.find((s) => s.resource === resource)?.entries ?? []);
   const customEntry = entries.find((e) => e.path === customPath);
   const stops = useStops(resource, 'custom', customPath) ?? [];
-  const base = stops[5] ?? stops[0] ?? '#7393ff';
+  const base = stops[5] ?? stops[0] ?? lsxPalette[5];
+  const lsxStops = isLsxPalette(stops);
 
   // generateColors hands back a readonly tuple; the draft stores a plain array
   const writeStops = (next: readonly string[]) => {
@@ -77,9 +85,10 @@ export function MantineColorControl({
 
   // Mantine registers a "custom" palette of its own, and the escape-hatch
   // button below is also called custom - listing both put two identical
-  // swatches at the end of the row.
+  // swatches at the end of the row. "dirk" is dirk-cfx-react's own brand
+  // palette, which has no place in an LSX picker.
   const palettes = useMemo(
-    () => Object.keys(theme.colors).filter((name) => name !== 'custom'),
+    () => Object.keys(theme.colors).filter((name) => name !== 'custom' && name !== 'dirk'),
     [theme.colors],
   );
 
@@ -141,13 +150,13 @@ export function MantineColorControl({
             align="center" justify="center" w="100%" h="2.2vh"
             style={{
               borderRadius: '0.3vh',
-              background: 'linear-gradient(90deg, #f0f4ff, #8ca7ff, #3b5bdb)',
+              background: `linear-gradient(90deg, ${stops[1] ?? lsxPalette[1]}, ${stops[5] ?? lsxPalette[5]}, ${stops[8] ?? lsxPalette[8]})`,
             }}
           >
             {current === 'custom' && <Check size="1.3vh" color="rgba(0,0,0,0.6)" />}
           </Flex>
           <Text ff="monospace" size="xxs" c={current === 'custom' ? '#ffffff' : 'rgba(255,255,255,0.45)'}>
-            custom
+            {lsxStops ? 'lsx' : 'custom'}
           </Text>
         </motion.button>
       </Flex>
@@ -188,6 +197,14 @@ export function MantineColorControl({
             disabled={disabled}
             onClick={() => writeStops(generateColors(base))}
           />
+          {!lsxStops && (
+            <StudioButton
+              label={t('themeControls.lsx_green', 'Back to the LSX green')}
+              icon={RotateCcw}
+              disabled={disabled}
+              onClick={() => writeStops(lsxPalette)}
+            />
+          )}
         </Flex>
       )}
 

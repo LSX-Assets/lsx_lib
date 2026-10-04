@@ -1,5 +1,5 @@
 import { alpha, Flex, Text, TextInput, useMantineTheme } from '@mantine/core';
-import { Modal, fetchNui, isEnvBrowser } from 'lsx-ui';
+import { Modal, fetchNui, isEnvBrowser } from 'dirk-cfx-react';
 import { motion } from 'framer-motion';
 import { ScrollText, Search } from 'lucide-react';
 import { useEffect, useMemo, useState } from 'react';

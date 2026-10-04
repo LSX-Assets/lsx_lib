@@ -129,7 +129,7 @@ if context == 'client' then
 
   RegisterNuiCallback('GET_SETTINGS', function(data, cb)
     -- Ensure scriptConfig has loaded (and the settings overlay has run) before
-    -- handing lib.settings to the NUI, otherwise LsxProvider caches the
+    -- handing lib.settings to the NUI, otherwise DirkProvider caches the
     -- pre-overlay convar defaults and the saved theme doesn't stick.
     pcall(function() return lib.scriptConfig.get() end)
     cb(lib.settings)

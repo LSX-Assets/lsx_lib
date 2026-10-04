@@ -1,5 +1,5 @@
 import { alpha, Flex, Text, Textarea, useMantineTheme } from '@mantine/core';
-import { Modal, copyToClipboard } from 'lsx-ui';
+import { Modal, copyToClipboard } from 'dirk-cfx-react';
 import { AlertTriangle, Braces, Check, Copy } from 'lucide-react';
 import { useMemo, useState } from 'react';
 import { effectiveValue, setValue } from './store';

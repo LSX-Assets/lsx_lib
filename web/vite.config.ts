@@ -45,10 +45,6 @@ function serveSiblingResources(): Plugin {
 export default defineConfig({
   plugins: [react(), serveSiblingResources()],
   base: './',
-  resolve: {
-    // The UI kit lives in src/lsx-ui and is imported by name, like a package.
-    alias: [{ find: /^lsx-ui$/, replacement: path.resolve(__dirname, 'src/lsx-ui/index.ts') }],
-  },
   build: {
     outDir: 'build',
   },

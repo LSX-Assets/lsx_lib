@@ -264,7 +264,7 @@
   "sections.groups.description": "Standaardwaarden voor het lsx_groups-systeem (groepsuitnodigingen, maximaal aantal leden, eruit gezet worden bij afwezigheid).",
   "sections.discord.description": "Botgegevens die lib.discord gebruikt om rollen op te zoeken, leden op te vragen en voor alle andere Discord-functies in scripts die op lsx_lib draaien. Laat leeg om dit uit te zetten — functies die het nodig hebben tonen dan een vriendelijk bericht dat je het in /lsx_lib moet instellen, in plaats van stilletjes te falen.",
   "sections.logger.description": "Externe logdienst die lib.logger gebruikt in elk script dat op lsx_lib draait. Die draait volledig binnen de eigen VM van lsx_lib — scripts sturen via een export, dus de geheimen van de dienst komen nooit in hun geheugen terecht. Zet service op 'off' om externe logging uit te schakelen (resources versturen daarnaast nog steeds hun eigen Discord-webhooks). Het oude `lsx:logger` en de convars per dienst werken nog als terugval zolang service op 'off' staat of niet is ingesteld.",
-  "settings.appearance.primaryColor.description": "De naam van het Mantine-palet dat als hoofdkleur van de interface wordt gebruikt. Kies 'lsx' om het eigen palet hieronder toe te passen.",
+  "settings.appearance.primaryColor.description": "De naam van het Mantine-palet dat als hoofdkleur van de interface wordt gebruikt. Kies 'custom' om het eigen palet hieronder toe te passen.",
   "settings.bridging.framework.label": "Framework",
   "settings.bridging.framework.description": "Het serverframework waaruit lsx_lib spelersgegevens leest.",
   "settings.bridging.inventory.label": "Inventaris",

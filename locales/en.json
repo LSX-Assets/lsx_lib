@@ -264,7 +264,7 @@
   "sections.groups.description": "Defaults for the lsx_groups system (party invites, max members, log-off kicks).",
   "sections.discord.description": "Discord bot credentials used by lib.discord for role lookups, member queries, and any other Discord-backed feature across lsx_lib consumers. Leave blank to disable — features that need it will surface a friendly 'configure in /lsx_lib' message instead of silently failing.",
   "sections.logger.description": "External log backend used by lib.logger across every lsx_lib consumer. Runs entirely inside lsx_lib's own VM — consumers emit through an export, so backend secrets never enter a consumer's memory image. Set service to 'off' to disable external logging (resources still fire their own Discord webhooks independently). Legacy `lsx:logger` + per-backend convars still work as a fallback when service is 'off'/unset.",
-  "settings.appearance.primaryColor.description": "Mantine palette key used as the UI primary colour. 'lsx' is the LSX green; 'custom' uses the palette defined below.",
+  "settings.appearance.primaryColor.description": "Mantine palette key used as the UI primary colour. 'custom' (the default) is the palette defined below, which ships as the LSX green.",
   "settings.bridging.framework.label": "Framework",
   "settings.bridging.framework.description": "Server framework lsx_lib reads player data from.",
   "settings.bridging.inventory.label": "Inventory",

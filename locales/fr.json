@@ -264,7 +264,7 @@
   "sections.groups.description": "Valeurs par défaut du système lsx_groups (invitations, nombre maximum de membres, exclusion après déconnexion).",
   "sections.discord.description": "Identifiants du bot Discord utilisés par lib.discord pour les recherches de rôles, les requêtes sur les membres et toute autre fonction liée à Discord dans les scripts lsx_lib. Laisse vide pour les désactiver — les fonctions concernées afficheront un message « à configurer dans /lsx_lib » au lieu d'échouer en silence.",
   "sections.logger.description": "Backend de journalisation externe utilisé par lib.logger dans tous les scripts lsx_lib. Il tourne entièrement dans la VM de lsx_lib — les scripts émettent via un export, si bien que les secrets du backend n'entrent jamais dans leur mémoire. Mets le service sur « off » pour désactiver la journalisation externe (les resources continuent d'envoyer leurs propres webhooks Discord). L'ancien `lsx:logger` et ses convars restent utilisables en repli tant que le service est sur « off » ou non défini.",
-  "settings.appearance.primaryColor.description": "Nom de palette Mantine utilisé comme couleur principale de l'interface. Choisis « LSX » pour appliquer la palette personnalisée définie ci-dessous.",
+  "settings.appearance.primaryColor.description": "Nom de palette Mantine utilisé comme couleur principale de l'interface. Choisis « custom » pour appliquer la palette personnalisée définie ci-dessous.",
   "settings.bridging.framework.label": "Framework",
   "settings.bridging.framework.description": "Framework serveur dans lequel lsx_lib lit les données des joueurs.",
   "settings.bridging.inventory.label": "Inventaire",

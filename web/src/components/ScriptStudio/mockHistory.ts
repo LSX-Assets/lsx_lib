@@ -1,5 +1,5 @@
 // Stand-in for the change log the server already keeps. The shape is exactly
-// lsx-ui's ScriptConfigHistoryEntry, so wiring the real callback later
+// dirk-cfx-react's ScriptConfigHistoryEntry, so wiring the real callback later
 // is a data swap, not a UI change.
 //
 // Timestamps are fixed rather than relative to "now" so the mock renders the
@@ -22,55 +22,6 @@ const MOD = { source: 14, name: 'Kayla (mod)', identifier: 'license2:44de91b0aa'
 const CONSOLE = { name: 'console' };
 
 export const MOCK_HISTORY: Record<string, HistoryEntry[]> = {
-  example_fishing: [
-    {
-      at_unix: 1755599400, at_utc: '2026-08-19 09:10:00', script: 'example_fishing',
-      admin: ALEX, expected_version: 41, applied_version: 42,
-      changes: [
-        { path: 'basic.spookPerCatch', old: 5, new: 8 },
-        { path: 'basic.debug', old: false, new: true },
-      ],
-    },
-    {
-      at_unix: 1755585600, at_utc: '2026-08-19 05:20:00', script: 'example_fishing',
-      admin: MOD, expected_version: 40, applied_version: 41,
-      changes: [
-        { path: 'theme.primaryColor', old: '#48E287', new: '#7CC0FF' },
-        { path: 'theme.useOverride', old: false, new: true },
-      ],
-    },
-    {
-      at_unix: 1755512700, at_utc: '2026-08-18 09:05:00', script: 'example_fishing',
-      admin: ALEX, expected_version: 39, applied_version: 40,
-      changes: [
-        { path: 'equipment.rods', old: '13 entries', new: '14 entries' },
-      ],
-    },
-    {
-      at_unix: 1755426300, at_utc: '2026-08-17 09:05:00', script: 'example_fishing',
-      admin: MOD, expected_version: 38, applied_version: 39,
-      changes: [
-        { path: 'basic.permitPrice', old: 2500, new: 4000 },
-        { path: 'basic.replacePermitPrice', old: 500, new: 900 },
-        { path: 'basic.permitInterval', old: 7, new: 14 },
-      ],
-    },
-    {
-      at_unix: 1755340000, at_utc: '2026-08-16 09:06:40', script: 'example_fishing',
-      admin: CONSOLE, expected_version: 37, applied_version: 38,
-      changes: [
-        { path: 'logging.webhookUrl', old: '', new: '(server only - hidden)' },
-      ],
-    },
-    {
-      at_unix: 1755253600, at_utc: '2026-08-15 09:06:40', script: 'example_fishing',
-      admin: ALEX, expected_version: 36, applied_version: 37,
-      changes: [
-        { path: 'zones', old: '2 entries', new: '3 entries' },
-        { path: 'basic.maxTrapsPerPlayer', old: 4, new: 6 },
-      ],
-    },
-  ],
   lsx_lib: [
     {
       at_unix: 1755596000, at_utc: '2026-08-19 08:13:20', script: 'lsx_lib',
@@ -80,7 +31,30 @@ export const MOCK_HISTORY: Record<string, HistoryEntry[]> = {
     {
       at_unix: 1755166000, at_utc: '2026-08-14 08:46:40', script: 'lsx_lib',
       admin: ALEX, expected_version: 11, applied_version: 12,
-      changes: [{ path: 'appearance.primaryColor', old: '#7CC0FF', new: '#48E287' }],
+      changes: [{ path: 'appearance.primaryShade', old: 7, new: 5 }],
+    },
+    {
+      at_unix: 1755512700, at_utc: '2026-08-18 09:05:00', script: 'lsx_lib',
+      admin: MOD, expected_version: 10, applied_version: 11,
+      changes: [
+        { path: 'groups.maxMembers', old: 4, new: 6 },
+        { path: 'groups.inviteValidTime', old: 5, new: 10 },
+      ],
+    },
+    {
+      at_unix: 1755340000, at_utc: '2026-08-16 09:06:40', script: 'lsx_lib',
+      admin: CONSOLE, expected_version: 9, applied_version: 10,
+      changes: [
+        { path: 'discord.token', old: '', new: '(server only - hidden)' },
+      ],
+    },
+    {
+      at_unix: 1755253600, at_utc: '2026-08-15 09:06:40', script: 'lsx_lib',
+      admin: ALEX, expected_version: 8, applied_version: 9,
+      changes: [
+        { path: 'basic.serverName', old: 'My Server', new: 'Los Santos Roleplay' },
+        { path: 'basic.currency', old: '$', new: '$' },
+      ],
     },
   ],
 };

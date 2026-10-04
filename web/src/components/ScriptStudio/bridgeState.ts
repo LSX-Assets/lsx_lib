@@ -1,4 +1,4 @@
-import { fetchNui, isEnvBrowser } from 'lsx-ui';
+import { fetchNui, isEnvBrowser } from 'dirk-cfx-react';
 import { useEffect, useMemo, useState } from 'react';
 import { effectiveValue, useStudio } from './store';
 import type { SettingEntry } from './types';

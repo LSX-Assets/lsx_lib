@@ -1,5 +1,5 @@
 import { alpha, Flex, MultiSelect, NumberInput, Text, TextInput, useMantineTheme } from '@mantine/core';
-import { ensureFrameworkGroups, useFrameworkGroups } from 'lsx-ui';
+import { ensureFrameworkGroups, useFrameworkGroups } from 'dirk-cfx-react';
 import { motion } from 'framer-motion';
 import { Plus, Trash2 } from 'lucide-react';
 import { useEffect, useMemo, useState } from 'react';

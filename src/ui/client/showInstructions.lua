@@ -1,7 +1,7 @@
 -- lib.showInstructions — bottom-right "do this in-world" instruction card.
 --
 -- General-purpose primitive next to lib.notify / lib.showText / lib.progress.
--- Drives the <InstructionPanel> React component (from lsx-ui) that's
+-- Drives the <InstructionPanel> React component (from dirk-cfx-react) that's
 -- mounted inside lsx_lib's own always-loaded NUI, so any resource — UI or
 -- not — can show the same card without needing its own React tree.
 --

@@ -1,6 +1,6 @@
 import { Marker } from '@adamscybot/react-leaflet-component-marker';
 import { alpha, Flex, Text, useMantineTheme } from '@mantine/core';
-import { ConfirmModal, Map as LsxMap, Modal, ZoomControls, gameToMap, mapToGame } from 'lsx-ui';
+import { ConfirmModal, Map as LsxMap, Modal, ZoomControls, gameToMap, mapToGame } from 'dirk-cfx-react';
 import { AnimatePresence, motion } from 'framer-motion';
 import L from 'leaflet';
 import 'leaflet-draw';
@@ -671,7 +671,7 @@ export function ZoneMap({
 }
 
 /**
- * lsx-ui's tile layer is capped at `minZoom: 4`, and at zoom 4 the GTA
+ * dirk-cfx-react's tile layer is capped at `minZoom: 4`, and at zoom 4 the GTA
  * map is several times taller than this pane - so an admin can never see the
  * whole coastline at once. Widen the range on the live instance and let leaflet
  * downscale the zoom-4 tiles (`minNativeZoom`) rather than blanking them.

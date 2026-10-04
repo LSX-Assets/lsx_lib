@@ -109,12 +109,9 @@ export const RESOURCE_REGISTRY: Record<string, { running: boolean; version?: str
   "ps-fuel": {
     "running": false
   },
-  "example_phone": {
-    "running": true,
-    "version": "0.9.2"
-  },
   "lb-phone": {
-    "running": false
+    "running": true,
+    "version": "2.1.0"
   },
   "qb-phone": {
     "running": false
@@ -395,12 +392,11 @@ export const MOCK_BRIDGES: {
     "value": "auto",
     "options": [
       "auto",
-      "example_phone",
       "lb-phone",
       "qb-phone",
       "yseries"
     ],
-    "detected": "example_phone"
+    "detected": "lb-phone"
   },
   {
     "key": "garage",

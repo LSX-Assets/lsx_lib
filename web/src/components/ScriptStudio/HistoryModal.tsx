@@ -1,10 +1,10 @@
 import { alpha, Flex, Select, Text, TextInput, useMantineTheme } from '@mantine/core';
-import { Modal } from 'lsx-ui';
+import { Modal } from 'dirk-cfx-react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { ChevronDown, ChevronRight, History, Search, Undo2, User } from 'lucide-react';
 import { useCallback, useDeferredValue, useEffect, useMemo, useState } from 'react';
 import { QueryClientProvider, useInfiniteQuery } from '@tanstack/react-query';
-import { fetchNui, isEnvBrowser } from 'lsx-ui';
+import { fetchNui, isEnvBrowser } from 'dirk-cfx-react';
 import { studioQueryClient } from './studioQuery';
 import { MOCK_HISTORY, type HistoryChange, type HistoryEntry } from './mockHistory';
 import { StudioButton } from './ui';

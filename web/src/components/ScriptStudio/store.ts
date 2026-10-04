@@ -1,4 +1,4 @@
-import { fetchNui, isEnvBrowser } from 'lsx-ui';
+import { fetchNui, isEnvBrowser } from 'dirk-cfx-react';
 import { create } from 'zustand';
 import { MOCK_LOCALES } from './mockLocales';
 import { MOCK_SCRIPTS } from './mockData';

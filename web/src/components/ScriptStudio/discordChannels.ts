@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import { fetchNui, isEnvBrowser } from 'lsx-ui';
+import { fetchNui, isEnvBrowser } from 'dirk-cfx-react';
 
 /**
  * Discord channels the bot can post to.
@@ -30,7 +30,7 @@ export type ChannelState = {
 
 const MOCK: DiscordChannel[] = [
   { id: '1', name: 'staff-logs', category: 'STAFF' },
-  { id: '2', name: 'fishing-logs', category: 'LOGS' },
+  { id: '2', name: 'staff', category: 'LOGS' },
   { id: '3', name: 'admin-actions', category: 'STAFF' },
 ];
 

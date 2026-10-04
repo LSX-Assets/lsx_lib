@@ -6,7 +6,7 @@
 // Lets any resource — UI or not — drive the bottom-right "do this in-world"
 // card without needing its own React tree.
 import { useState } from 'react';
-import { InstructionPanel, type InstructionKey } from 'lsx-ui';
+import { InstructionPanel, type InstructionKey } from 'dirk-cfx-react';
 import { useNuiEvent } from '../../hooks/useNuiEvent';
 import { setUiTheme } from '../../stores/uiTheme';
 

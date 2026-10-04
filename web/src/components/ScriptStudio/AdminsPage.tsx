@@ -1,5 +1,5 @@
 import { alpha, Flex, Text, TextInput, useMantineTheme } from '@mantine/core';
-import { ConfirmModal, Modal, copyToClipboard } from 'lsx-ui';
+import { ConfirmModal, Modal, copyToClipboard } from 'dirk-cfx-react';
 import { AnimatePresence, motion } from 'framer-motion';
 import {
   Check, Copy, Eye, Lock, Pencil, Search, Shield, ShieldCheck, Trash2, UserPlus, Users,

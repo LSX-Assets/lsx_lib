@@ -1,5 +1,6 @@
 import { alpha, Flex, Text, TextInput, Tooltip, useMantineTheme } from '@mantine/core';
-import { ConfirmModal, isEnvBrowser, lsxBrand, useSettings } from 'lsx-ui';
+import { ConfirmModal, isEnvBrowser, useSettings } from 'dirk-cfx-react';
+import { lsxBrand } from '../../theme/lsx';
 import lsxLogo from '../../assets/lsx-logo.png';
 import { AnimatePresence, motion } from 'framer-motion';
 import {
@@ -51,7 +52,7 @@ import { loadLocales, sectionKey, settingKey, translate, useActiveLanguage, useB
 import { SetupWizard } from './SetupWizard';
 import type { SettingEntry, SettingGroup, StudioScript } from './types';
 import { useInputCssVars } from './Controls';
-import { useAdminToolStore } from 'lsx-ui';
+import { useAdminToolStore } from 'dirk-cfx-react';
 import { ChangelogPage } from './ChangelogPage';
 import { TestsPage } from './TestsPage';
 import { useAnnouncedResources } from './Dispatch';
@@ -195,8 +196,8 @@ export default function ScriptStudio() {
   }, [open, language, scripts]);
 
   // Live theme switching, the way the old per-resource panel had it: the shared
-  // appearance settings feed lsx-ui's settings store, which is what
-  // LsxProvider builds the Mantine theme from - so a colour change repaints the
+  // appearance settings feed dirk-cfx-react's settings store, which is what
+  // DirkProvider builds the Mantine theme from - so a colour change repaints the
   // panel as you make it, before saving.
   const sharedScript = useMemo(() => scripts.find((entry) => entry.shared), [scripts]);
   const sharedDraft = useStudio((s) => (sharedScript ? s.draft[sharedScript.resource] : undefined));

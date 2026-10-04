@@ -31,6 +31,7 @@
     "axios": "^1.20.0",
     "chroma-js": "^3.2.0",
     "dayjs": "^1.11.13",
+    "dirk-cfx-react": "^1.1.97",
     "embla-carousel-autoplay": "8.5.2",
     "framer-motion": "^12.23.26",
     "leaflet": "^1.9.4",
@@ -43,7 +44,6 @@
     "react-leaflet": "^5.0.0",
     "react-scale-text": "^1.2.2",
     "usehooks-ts": "^3.1.0",
-    "zod": "^4.3.6",
     "zustand": "^5.0.9"
   },
   "devDependencies": {

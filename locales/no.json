@@ -264,7 +264,7 @@
   "sections.groups.description": "Standardverdier for lsx_groups-systemet (gruppeinvitasjoner, maks antall medlemmer, utkasting ved frakobling).",
   "sections.discord.description": "Innloggingsdetaljer for Discord-boten som lib.discord bruker til rolleoppslag, medlemssøk og alle andre Discord-baserte funksjoner på tvers av skriptene som bruker lsx_lib. La feltet stå tomt for å slå det av — funksjoner som trenger det, viser en vennlig beskjed om å sette det opp i /lsx_lib i stedet for å svikte i stillhet.",
   "sections.logger.description": "Ekstern loggtjeneste som lib.logger bruker i alle skript som bygger på lsx_lib. Den kjører i sin helhet inne i lsx_lib sin egen VM — skriptene sender via en export, så hemmelighetene til tjenesten havner aldri i minnet deres. Sett tjenesten til «off» for å slå av ekstern logging (ressursene fyrer fortsatt av sine egne Discord-webhooks uavhengig av dette). Gamle `lsx:logger` og convar-ene per tjeneste virker fortsatt som reserve når tjenesten er «off» eller ikke satt.",
-  "settings.appearance.primaryColor.description": "Navnet på Mantine-paletten som brukes som hovedfarge i grensesnittet. Bruk «lsx» for å ta i bruk den egne paletten som er definert under.",
+  "settings.appearance.primaryColor.description": "Navnet på Mantine-paletten som brukes som hovedfarge i grensesnittet. Bruk «custom» for å ta i bruk den egne paletten som er definert under.",
   "settings.bridging.framework.label": "Rammeverk",
   "settings.bridging.framework.description": "Serverrammeverket lsx_lib henter spillerdata fra.",
   "settings.bridging.inventory.label": "Inventar",

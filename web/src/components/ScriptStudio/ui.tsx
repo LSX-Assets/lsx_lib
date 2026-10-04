@@ -1,5 +1,5 @@
 import { alpha, Flex, Text, useMantineTheme } from '@mantine/core';
-import { getItemImageUrl } from 'lsx-ui';
+import { getItemImageUrl } from 'dirk-cfx-react';
 import { Package } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';

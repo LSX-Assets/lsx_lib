@@ -1,7 +1,7 @@
 import { alpha, Flex, Text, useMantineTheme } from '@mantine/core';
-import { Modal } from 'lsx-ui';
+import { Modal } from 'dirk-cfx-react';
 import { useState } from 'react';
-import { useItems } from 'lsx-ui';
+import { useItems } from 'dirk-cfx-react';
 import { PickerDrawer } from './PickerDrawer';
 import { RowFields } from './RowFields';
 import { ItemArt, rowIdentity, singular, StudioButton } from './ui';

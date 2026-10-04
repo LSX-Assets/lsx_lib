@@ -13,7 +13,7 @@
 --   ADMIN_TOOL_QUERY { id = 'validateModels', value = { 'shell_a', 'shell_b' } }
 --   → returns { shell_a = true, shell_b = false }
 --
--- Used by lsx-ui's useValidModels hook so admin panels can grey
+-- Used by dirk-cfx-react's useValidModels hook so admin panels can grey
 -- out shell / prop rows whose model isn't loaded on this server, instead
 -- of letting the admin click into a broken row and only finding out at
 -- save time.

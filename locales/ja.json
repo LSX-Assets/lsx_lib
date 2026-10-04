@@ -264,7 +264,7 @@
   "sections.groups.description": "lsx_groups の既定値です（グループへの招待、最大人数、オフライン時の自動除外）。",
   "sections.discord.description": "lsx_lib を使うスクリプト全体で、ロールの照会やメンバーの取得など Discord 連携機能に lib.discord が使う Bot の認証情報です。空欄にすると無効になり、必要な機能は黙って失敗するのではなく「/lsx_lib で設定してください」というメッセージを表示します。",
   "sections.logger.description": "lsx_lib を使うスクリプト全体で lib.logger が利用する外部ログサービスです。処理はすべて lsx_lib 自身の VM 内で完結し、各スクリプトは export を通して送るだけなので、認証情報がスクリプト側のメモリに入ることはありません。service を 'off' にすると外部へのログ送信を停止します（各リソースは引き続き独自の Discord Webhook を送信します）。service が 'off' または未設定のときは、従来の `lsx:logger` と各サービスごとの convar が代替として機能します。",
-  "settings.appearance.primaryColor.description": "UI のメインカラーとして使う Mantine のパレット名です。'lsx' を選ぶと、下で設定したカスタムパレットが適用されます。",
+  "settings.appearance.primaryColor.description": "UI のメインカラーとして使う Mantine のパレット名です。'custom' を選ぶと、下で設定したカスタムパレットが適用されます。",
   "settings.bridging.framework.label": "フレームワーク",
   "settings.bridging.framework.description": "lsx_lib がプレイヤー情報を読み取るサーバーフレームワークです。",
   "settings.bridging.inventory.label": "インベントリ",

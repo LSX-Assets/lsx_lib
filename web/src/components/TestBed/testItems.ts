@@ -26,48 +26,43 @@ export const defaultTestItems = [
     onEnable: {
       action:'OPEN_CONTEXT',
       data: {
-        title:'CALL OF HAGLER',
-        description:'This is a test menu',
-        icon:'gun',
+        title:'LSX ASSETS',
+        description:'A test menu',
+        icon:'cube',
         canClose:true,
         menu:'main',
         searchBar:true,
-        clickSounds:true, 
+        clickSounds:true,
         hoverSounds:true,
-        // menu:'main',
-      
-        // watermark:'https://via.placeholder.com/150x150',
-      
+
         options:[
           {
-            title:'Find Ranked',
+            title:'Browse assets',
             icon:'search',
-            readOnly:true, 
+            readOnly:true,
           },
           {
-            title:'Private Game',
-            icon:'https://callofdutymaps.com/wp-content/uploads/MW-m16a4.png',
-            description:"Allows you to define the rules of the game will not affect your rank",
-            image:  'https://callofdutymaps.com/wp-content/uploads/MW-m16a4.png',
+            title:'Los Santos County Jail',
+            icon:'building',
+            description:'A row with a description under its title',
           },
           {
-            title:'Edit Classes',
-            icon:'edit',
-            description:'Allows you edit the classes for this player',
+            title:'Disabled option',
+            icon:'lock',
+            description:'Rows can be shown but not picked',
             disabled:true,
           },
           {
-            title:'Edit Classes',
-            icon:'edit',
+            title:'Open a submenu',
+            icon:'folder-open',
             arrow:true,
-            description:'Allows you edit the classes for this player'
+            description:'An arrow means the row leads somewhere'
           },
           {
-            title:'Edit Classes',
-            icon:'edit',
-            description:'Allows you edit the classes for this player'
+            title:'Settings',
+            icon:'sliders',
+            description:'Opens nothing in this test menu'
           },
-      
         ]
       }
     },
@@ -272,42 +267,42 @@ export const defaultTestItems = [
     onEnable: {
       action: 'DIALOG_STATE',
       data: {
-        id       : 'yard_work',
-        title    : 'Vernon Pike',
-        subtitle : 'Cypress Flats',
-        dialog   : "Three things need collecting. Take one, or get out my way.",
+        id       : 'leasing',
+        title    : 'Leasing agent',
+        subtitle : 'Mirror Park',
+        dialog   : "Three places came free this week. Pick one and I'll get the keys.",
 
         skill : {
-          label: 'Reputation', level: 4, progress: 62,
+          label: 'Standing', level: 4, progress: 62,
           xp: 1840, nextLevelXp: 2600, xpToNext: 760,
           rankLabel: 'Regular',
         },
 
         metadata : [
-          { label: 'Deals in', value: 'Muscle, Coupes' },
-          { label: 'Pays', value: '85% of the going rate', emphasis: true },
+          { label: 'Leases', value: 'Warehouses, storefronts' },
+          { label: 'Deposit', value: 'One month up front', emphasis: true },
         ],
 
         responses : [
           {
-            index: 1, label: 'Sabre Turbo', sub: 'Sandy Shores', value: '$4,200',
-            badge: 'Guarded', badgeTone: 'warn',
+            index: 1, label: 'Warehouse', sub: 'Cypress Flats', value: '$4,200',
+            badge: 'Busy area', badgeTone: 'warn',
             // Deliberately a URL that does not resolve, so the fallback is
             // what this fixture actually proves.
-            image: 'nui://example_cars/vehicleImages/sabregt.png',
-            imageFallback: 'data:image/svg+xml;utf8,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 170 62%22%3E%3Cpath fill=%22%23fff%22 fill-opacity=%220.92%22 fill-rule=%22evenodd%22 d=%22M10 48 L10 30 L44 26 L58 13 L106 13 L118 26 L158 29 L158 48 Z M31 48 a9 9 0 1 0 18 0 a9 9 0 1 0 -18 0 Z M36.22 48 a3.78 3.78 0 1 0 7.56 0 a3.78 3.78 0 1 0 -7.56 0 Z M119 48 a9 9 0 1 0 18 0 a9 9 0 1 0 -18 0 Z M124.22 48 a3.78 3.78 0 1 0 7.56 0 a3.78 3.78 0 1 0 -7.56 0 Z%22/%3E%3C/svg%3E',
+            image: 'nui://lsx_lib/web/build/missing.png',
+            imageFallback: 'data:image/svg+xml;utf8,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 170 62%22%3E%3Cpath fill=%22%23fff%22 fill-opacity=%220.92%22 fill-rule=%22evenodd%22 d=%22M14 54 L14 24 L52 10 L118 10 L156 24 L156 54 Z M30 54 L30 34 L58 34 L58 54 Z M70 30 L100 30 L100 40 L70 40 Z M112 54 L112 34 L140 34 L140 54 Z%22/%3E%3C/svg%3E',
             dontClose: true,
           },
           {
-            index: 2, label: 'Futo GTX', sub: 'Vespucci Beach', value: '$2,800',
-            badge: 'Street', badgeTone: 'ok',
-            image: 'data:image/svg+xml;utf8,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 170 62%22%3E%3Cpath fill=%22%23fff%22 fill-opacity=%220.92%22 fill-rule=%22evenodd%22 d=%22M12 48 L12 31 L34 27 L56 14 L96 14 L134 30 L156 33 L156 48 Z M29 48 a9 9 0 1 0 18 0 a9 9 0 1 0 -18 0 Z M34.22 48 a3.78 3.78 0 1 0 7.56 0 a3.78 3.78 0 1 0 -7.56 0 Z M121 48 a9 9 0 1 0 18 0 a9 9 0 1 0 -18 0 Z M126.22 48 a3.78 3.78 0 1 0 7.56 0 a3.78 3.78 0 1 0 -7.56 0 Z%22/%3E%3C/svg%3E',
+            index: 2, label: 'Storefront', sub: 'Vinewood', value: '$2,800',
+            badge: 'Quiet', badgeTone: 'ok',
+            image: 'data:image/svg+xml;utf8,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 170 62%22%3E%3Cpath fill=%22%23fff%22 fill-opacity=%220.92%22 fill-rule=%22evenodd%22 d=%22M20 54 L20 20 L150 20 L150 54 Z M28 28 L28 42 L72 42 L72 28 Z M98 28 L98 42 L142 42 L142 28 Z M78 54 L78 30 L92 30 L92 54 Z M14 20 L28 8 L142 8 L156 20 Z%22/%3E%3C/svg%3E',
             dontClose: true,
           },
           {
-            index: 3, label: 'Burrito', sub: 'Elysian Island', value: '$6,500',
-            badge: 'Convoy', badgeTone: 'bad',
-            image: 'data:image/svg+xml;utf8,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 170 62%22%3E%3Cpath fill=%22%23fff%22 fill-opacity=%220.92%22 fill-rule=%22evenodd%22 d=%22M14 46 L14 22 L30 8 L142 8 L154 22 L154 46 Z M31 48 a9 9 0 1 0 18 0 a9 9 0 1 0 -18 0 Z M36.22 48 a3.78 3.78 0 1 0 7.56 0 a3.78 3.78 0 1 0 -7.56 0 Z M121 48 a9 9 0 1 0 18 0 a9 9 0 1 0 -18 0 Z M126.22 48 a3.78 3.78 0 1 0 7.56 0 a3.78 3.78 0 1 0 -7.56 0 Z%22/%3E%3C/svg%3E',
+            index: 3, label: 'Office floor', sub: 'Pillbox Hill', value: '$6,500',
+            badge: 'Taken soon', badgeTone: 'bad',
+            image: 'data:image/svg+xml;utf8,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 170 62%22%3E%3Cpath fill=%22%23fff%22 fill-opacity=%220.92%22 fill-rule=%22evenodd%22 d=%22M58 56 L58 6 L112 6 L112 56 Z M66 14 L66 20 L76 20 L76 14 Z M94 14 L94 20 L104 20 L104 14 Z M66 28 L66 34 L76 34 L76 28 Z M94 28 L94 34 L104 34 L104 34 Z M78 56 L78 42 L92 42 L92 56 Z%22/%3E%3C/svg%3E',
             dontClose: true,
           },
           { index: 4, label: 'Nothing today', pin: true },

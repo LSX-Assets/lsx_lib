@@ -1,5 +1,5 @@
 import { alpha, Flex, Select, Text, useMantineTheme } from '@mantine/core';
-import { resolveItemLabel, useItems } from 'lsx-ui';
+import { resolveItemLabel, useItems } from 'dirk-cfx-react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { Plus, Trash2 } from 'lucide-react';
 import { useMemo, useState } from 'react';

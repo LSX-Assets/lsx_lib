@@ -1,5 +1,5 @@
 import { alpha, Flex, Text, useMantineTheme } from '@mantine/core';
-import { GroupSelect } from 'lsx-ui';
+import { GroupSelect } from 'dirk-cfx-react';
 import { motion } from 'framer-motion';
 import { Pencil, Plus, Trash2 } from 'lucide-react';
 import { useState } from 'react';

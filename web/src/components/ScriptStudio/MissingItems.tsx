@@ -2,7 +2,7 @@ import { alpha, Flex, Portal, Select, Text, useMantineTheme } from '@mantine/cor
 import { motion } from 'framer-motion';
 import { AlertTriangle, Check, Copy } from 'lucide-react';
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { useItems, copyToClipboard } from 'lsx-ui';
+import { useItems, copyToClipboard } from 'dirk-cfx-react';
 import { MOCK_ITEMS } from './mockData';
 import { effectiveValue } from './store';
 import type { SettingColumn, SettingEntry, StudioScript } from './types';
@@ -18,7 +18,7 @@ const INVENTORY_FORMATS = [
 /**
  * Configured items that do not exist in the server's inventory.
  *
- * lsx-ui ships MissingItemsBanner already, but it fetches
+ * dirk-cfx-react ships MissingItemsBanner already, but it fetches
  * `<scriptName>:getMissingItems` for the ONE resource it is mounted in - a hub
  * showing several scripts needs the audit per script, so this computes it from
  * the script being viewed. Same idea, hub-shaped: it should move into the

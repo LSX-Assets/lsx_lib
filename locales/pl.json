@@ -264,7 +264,7 @@
   "sections.groups.description": "Domyślne ustawienia systemu lsx_groups (zaproszenia do grupy, maksymalna liczba członków, usuwanie po wylogowaniu).",
   "sections.discord.description": "Dane bota Discord, z których lib.discord korzysta przy sprawdzaniu ról, zapytaniach o członków i wszystkich innych funkcjach opartych na Discordzie w skryptach używających lsx_lib. Zostaw puste, żeby to wyłączyć — funkcje, które tego wymagają, pokażą uprzejmy komunikat „skonfiguruj w /lsx_lib” zamiast po cichu przestać działać.",
   "sections.logger.description": "Zewnętrzna usługa logowania, z której lib.logger korzysta we wszystkich skryptach opartych na lsx_lib. Działa w całości wewnątrz maszyny wirtualnej lsx_lib — skrypty wysyłają dane przez export, więc sekrety usługi nigdy nie trafiają do ich pamięci. Ustaw service na 'off', żeby wyłączyć logowanie zewnętrzne (zasoby nadal niezależnie wysyłają własne webhooki Discord). Stare `lsx:logger` i convary poszczególnych usług nadal działają jako rozwiązanie zapasowe, gdy service jest ustawione na 'off' albo wcale.",
-  "settings.appearance.primaryColor.description": "Nazwa palety Mantine używanej jako główny kolor interfejsu. Wybierz 'lsx', żeby zastosować własną paletę zdefiniowaną poniżej.",
+  "settings.appearance.primaryColor.description": "Nazwa palety Mantine używanej jako główny kolor interfejsu. Wybierz 'custom', żeby zastosować własną paletę zdefiniowaną poniżej.",
   "settings.bridging.framework.label": "Framework",
   "settings.bridging.framework.description": "Framework serwera, z którego lsx_lib czyta dane graczy.",
   "settings.bridging.inventory.label": "Ekwipunek",

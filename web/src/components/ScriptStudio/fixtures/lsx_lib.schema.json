@@ -124,8 +124,8 @@
         "primaryColor": {
           "x-control": "mantineColor",
           "type": "string",
-          "default": "lsx",
-          "description": "Mantine palette key used as the UI primary colour. 'lsx' is the LSX green; 'custom' uses the palette defined below."
+          "default": "custom",
+          "description": "Mantine palette key used as the UI primary colour. 'custom' (the default) is the palette defined below, which ships as the LSX green."
         },
         "primaryShade": {
           "x-control": "shade",
@@ -137,18 +137,18 @@
         },
         "customTheme": {
           "type": "array",
-          "description": "Ten-colour palette (light to dark) used when primaryColor is set to 'custom'. Provide exactly ten hex codes ordered from lightest shade to darkest.",
+          "description": "Ten-colour palette (light to dark) used when primaryColor is 'custom'. Ships as the LSX green, shade 5 being the brand colour. Provide exactly ten hex codes ordered from lightest shade to darkest.",
           "default": [
-            "#f8edff",
-            "#e9d9f6",
-            "#d0b2e8",
-            "#b588da",
-            "#9e65cf",
-            "#914ec8",
-            "#8a43c6",
-            "#7734af",
-            "#692d9d",
-            "#5c258b"
+            "#EAFCF2",
+            "#D2F8E3",
+            "#ABF1CB",
+            "#82EAB0",
+            "#63E59B",
+            "#48E287",
+            "#1FBA83",
+            "#12A882",
+            "#039482",
+            "#027A6B"
           ]
         }
       }

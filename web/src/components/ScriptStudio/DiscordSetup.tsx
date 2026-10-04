@@ -1,5 +1,5 @@
 import { alpha, Flex, Text, useMantineTheme } from '@mantine/core';
-import { fetchNui, openLink } from 'lsx-ui';
+import { fetchNui, openLink } from 'dirk-cfx-react';
 import { AnimatePresence, motion } from 'framer-motion';
 import {
   CheckCircle2, ChevronDown, ExternalLink, Loader2, PlugZap, XCircle,

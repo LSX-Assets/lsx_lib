@@ -66,7 +66,7 @@ end
 
 --- Level and progress, ready for `LevelPanel` / `LevelBanner`.
 ---
---- The field names match `createSkill` in lsx-ui exactly, so this drops
+--- The field names match `createSkill` in dirk-cfx-react exactly, so this drops
 --- into either component with nothing in between to go stale.
 function skill.progressFor(id, key)
   return skill.progress(id, skill.get(id, key))

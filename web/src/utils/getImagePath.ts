@@ -1,4 +1,4 @@
-import { useSettings } from "lsx-ui";
+import { useSettings } from 'dirk-cfx-react';
 
 
 function checkImageExists(url: string) {

@@ -264,7 +264,7 @@
   "sections.groups.description": "Numatytieji lsx_groups sistemos nustatymai (kvietimai į grupę, didžiausias narių skaičius, išmetimas atsijungus).",
   "sections.discord.description": "Discord boto prisijungimo duomenys, kuriuos lib.discord naudoja rolėms tikrinti, narių užklausoms ir bet kuriai kitai Discord funkcijai visuose lsx_lib skriptuose. Palikite tuščią, kad išjungtumėte — funkcijos, kurioms to reikia, parodys draugišką pranešimą „sukonfigūruokite /lsx_lib“, o ne tyliai nustos veikti.",
   "sections.logger.description": "Išorinė žurnalų sistema, kurią lib.logger naudoja visuose lsx_lib skriptuose. Ji veikia tik lsx_lib viduje — skriptai rašo per eksportą, tad sistemos paslaptys niekada nepatenka į jų atmintį. Nustatykite paslaugą į „off“, kad išjungtumėte išorinį žurnalavimą (resursai vis tiek savarankiškai siųs savo Discord webhook'us). Senasis `lsx:logger` ir atskiri convar'ai vis dar veikia kaip atsarginis variantas, kai paslauga yra „off“ arba nenustatyta.",
-  "settings.appearance.primaryColor.description": "Mantine paletės pavadinimas, naudojamas kaip pagrindinė sąsajos spalva. Pasirinkite „lsx“, kad būtų taikoma žemiau aprašyta sava paletė.",
+  "settings.appearance.primaryColor.description": "Mantine paletės pavadinimas, naudojamas kaip pagrindinė sąsajos spalva. Pasirinkite „custom“, kad būtų taikoma žemiau aprašyta sava paletė.",
   "settings.bridging.framework.label": "Framework",
   "settings.bridging.framework.description": "Serverio framework, iš kurio lsx_lib ima žaidėjų duomenis.",
   "settings.bridging.inventory.label": "Inventorius",

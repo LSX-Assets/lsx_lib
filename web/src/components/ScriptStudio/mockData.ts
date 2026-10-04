@@ -8,7 +8,7 @@
 // yet) and the stand-in inventory below.
 
 import libSchema from './fixtures/lsx_lib.schema.json';
-import { useItems } from 'lsx-ui';
+import { useItems } from 'dirk-cfx-react';
 import { schemaToStudio } from './schemaToStudio';
 import type { StudioScript } from './types';
 
@@ -56,7 +56,7 @@ export const MOCK_ITEMS: { name: string; label: string }[] = [
 }));
 
 
-// In game FETCH_ALL_ITEMS fills lsx-ui's item store from the inventory
+// In game FETCH_ALL_ITEMS fills dirk-cfx-react's item store from the inventory
 // bridge. In a browser nothing answers it, so seed the same store from the mock
 // - that is what makes SelectItem, item images and the inventory-sourced
 // label/description mirroring behave the way they will on a server.

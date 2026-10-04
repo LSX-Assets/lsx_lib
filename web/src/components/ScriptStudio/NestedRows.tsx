@@ -1,10 +1,10 @@
 import { alpha, Flex, Text, useMantineTheme } from '@mantine/core';
-import { ConfirmModal } from 'lsx-ui';
+import { ConfirmModal } from 'dirk-cfx-react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { ChevronRight, Plus, Trash2 } from 'lucide-react';
 import { useState } from 'react';
 import { NestedRowModal } from './NestedRowModal';
-import { useItems } from 'lsx-ui';
+import { useItems } from 'dirk-cfx-react';
 import { ItemArt, rowIdentity, singular, StudioButton } from './ui';
 import { AnyIcon } from './Icon';
 import type { SettingColumn } from './types';
