@@ -16,7 +16,7 @@ const lib = schemaToStudio(libSchema as Record<string, unknown>, {
   resource: 'lsx_lib',
   label: 'Shared Settings',
   icon: 'library',
-  version: '1.0.0',
+  version: '0.0.0',
   shared: true,
   groupIcons: {
     basic: 'sliders-horizontal',

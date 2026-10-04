@@ -123,7 +123,7 @@ const MOCK: DispatchEntry[] = [
   {
     id: 'lsx-lib-100',
     kind: 'update',
-    title: 'lsx_lib 1.0 is out',
+    title: 'lsx_lib is out',
     body: 'The shared library behind every LSX script: bridges for your framework, inventory and target, and this panel to set them all up.',
     action: { label: 'Read the changelog', changelog: 'lsx_lib' },
     stamp: '4 Oct',
