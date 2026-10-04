@@ -1,0 +1,30 @@
+.torn-edge-wrapper {
+  position: relative;
+  isolation: isolate;
+  border-radius: inherit;
+  overflow: visible;
+}
+
+.torn-edge-wrapper::before {
+  content: "";
+  position: absolute;
+  inset: -1.5px;
+  background: inherit;
+  border: inherit;
+  border-radius: inherit;
+  filter: url(#torn-edge-filter);
+  mix-blend-mode: screen; /* best for dark panels */
+  opacity: 0.95; /* slightly brighter */
+  z-index: -1;
+  pointer-events: none;
+
+  /* Add a faint inner glow + edge lift for contrast */
+  box-shadow:
+    0 0 10px rgba(255, 255, 255, 0.08) inset,
+    0 0 12px rgba(0, 0, 0, 0.65);
+}
+
+.torn-edge-wrapper > * {
+  position: relative;
+  z-index: 0;
+}

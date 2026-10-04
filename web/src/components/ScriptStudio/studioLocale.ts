@@ -1,0 +1,149 @@
+import { fetchNui, isEnvBrowser } from 'lsx-ui';
+import { useStudio } from './store';
+
+/**
+ * Setting labels belong to the SCRIPT, not to lsx_lib.
+ *
+ * The hub renders every script's settings, but the words describing them ship
+ * with the script that owns them - otherwise adding a setting to fishing would
+ * need a lsx_lib locale update, and lsx_lib's locale file would slowly become
+ * a dumping ground for every product.
+ *
+ * Resolution order for any string:
+ *   1. the script's own bundle for the active language
+ *   2. the script's own bundle for English
+ *   3. the schema's text (already English)
+ *
+ * So a script works with no translations at all, and translating is purely
+ * additive. lsx_lib's own locales cover only the panel's chrome - Save,
+ * Discard, "Search these settings...".
+ *
+ * Keys are DERIVED from the setting path, so nothing needs annotating:
+ *   basic.debug          -> settings.basic.debug.label / .description
+ *   <group id>           -> sections.<id>.label / .description
+ */
+
+export type LocaleBundle = Record<string, string>;
+/** resource -> language -> key -> text */
+export type LocaleBundles = Record<string, Record<string, LocaleBundle>>;
+
+export function settingKey(path: string, field: 'label' | 'description'): string {
+  return `settings.${path}.${field}`;
+}
+
+export function sectionKey(groupId: string, field: 'label' | 'description'): string {
+  return `sections.${groupId}.${field}`;
+}
+
+/**
+ * The language the panel is showing. Comes from lsx_lib's own
+ * `appearance.language` setting, read through the draft so switching it
+ * re-renders every label immediately - no reopen, exactly like the old panel.
+ */
+/**
+ * The same read, outside React - validation runs as a plain function over the
+ * store and cannot call a hook.
+ */
+export function activeLanguage(): string {
+  return pickLanguage(useStudio.getState());
+}
+
+export function useActiveLanguage(): string {
+  return useStudio(pickLanguage);
+}
+
+function pickLanguage(state: ReturnType<typeof useStudio.getState>): string {
+  return ((state) => {
+    const lib = state.scripts.find((script) => script.shared);
+    if (!lib) return 'en';
+    const entry = lib.entries.find((item) => item.path.endsWith('.language'));
+    if (!entry) return 'en';
+    const staged = state.draft[lib.resource]?.[entry.path];
+    const value = staged
+      ? (staged.kind === 'reset' ? entry.default : staged.value)
+      : entry.value;
+    return typeof value === 'string' ? value : 'en';
+  })(state);
+}
+
+export function useBundles(): LocaleBundles {
+  return useStudio((state) => state.locales);
+}
+
+/** Resolve one string, falling back through language -> English -> schema. */
+export function translate(
+  bundles: LocaleBundles,
+  language: string,
+  resource: string,
+  key: string,
+  fallback: string,
+): string {
+  const forResource = bundles[resource];
+  if (!forResource) return fallback;
+  return forResource[language]?.[key]
+    ?? forResource.en?.[key]
+    ?? fallback;
+}
+
+/**
+ * Pull the bundles for one language into the store.
+ *
+ * Nothing was doing this: the panel resolved every label through
+ * `state.locales`, which never moved off its browser mock, so switching the
+ * language setting re-rendered everything in exactly the same English.
+ *
+ * English is fetched alongside anything else, because it is the fallback the
+ * whole resolution chain leans on. Already-loaded languages are skipped - the
+ * bundles are immutable for the life of the resource.
+ */
+export async function loadLocales(language: string) {
+  if (isEnvBrowser()) return;
+
+  const state = useStudio.getState();
+  const resources = state.scripts.map((script) => script.resource);
+  if (resources.length === 0) return;
+
+  const wanted = language === 'en' ? ['en'] : [language, 'en'];
+  const missing = wanted.filter((lang) =>
+    !resources.every((resource) => state.locales[resource]?.[lang]));
+  if (missing.length === 0) return;
+
+  for (const lang of missing) {
+    const bundles = await fetchNui<Record<string, LocaleBundle>>(
+      'GET_STUDIO_LOCALES',
+      { language: lang, resources },
+      {},
+    ).catch(() => ({} as Record<string, LocaleBundle>));
+
+    useStudio.setState((current) => {
+      const next: LocaleBundles = { ...current.locales };
+      for (const [resource, bundle] of Object.entries(bundles ?? {})) {
+        next[resource] = { ...next[resource], [lang]: bundle };
+      }
+      // A language with no file anywhere still gets marked as attempted, so a
+      // missing translation is not re-fetched on every render.
+      for (const resource of resources) {
+        if (!next[resource]?.[lang]) {
+          next[resource] = { ...next[resource], [lang]: {} };
+        }
+      }
+      return { locales: next };
+    });
+  }
+}
+
+/**
+ * A translator for the panel's OWN strings.
+ *
+ * Setting labels belong to the script that owns them; the panel's furniture
+ * belongs to lsx_lib. Components kept inlining that furniture in English,
+ * which is why the overview page and the theme hints stayed English while the
+ * settings around them translated. Keys are prefixed `studio.` so the panel's
+ * strings are obvious in the bundle.
+ */
+export function useChrome() {
+  const language = useActiveLanguage();
+  const bundles = useBundles();
+  return (key: string, fallback: string) =>
+    translate(bundles, language, 'lsx_lib', `studio.${key}`, fallback);
+}

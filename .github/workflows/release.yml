@@ -1,0 +1,95 @@
+name: Release
+
+# Every push to main is a release: build the UI, bump the patch version in
+# fxmanifest.lua, commit that back, and publish lsx_lib.zip as a GitHub release
+# tagged v<version>. A commit message with [no-bump] ships the manifest version
+# exactly as written, which is how a minor or major version goes out.
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+# Two quick pushes release one after the other, never at the same time, so the
+# second run starts from the first one's version bump.
+concurrency:
+  group: release
+  cancel-in-progress: false
+
+jobs:
+  release:
+    name: Build and release
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out main
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+          cache-dependency-path: web/pnpm-lock.yaml
+
+      - name: Install UI dependencies
+        run: pnpm install --frozen-lockfile
+        working-directory: web
+
+      - name: Build the UI
+        run: pnpm build
+        working-directory: web
+
+      - name: Bump the manifest version
+        run: node .github/actions/bump-manifest-version.js
+        env:
+          COMMIT_MSG: ${{ github.event.head_commit.message }}
+
+      - name: Stop if this version is already released
+        run: |
+          if git rev-parse -q --verify "refs/tags/v$NEW_VERSION" >/dev/null; then
+            echo "::error::v$NEW_VERSION is already released. Raise the version in fxmanifest.lua, or push without [no-bump]."
+            exit 1
+          fi
+
+      - name: Commit the version
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add fxmanifest.lua
+          if ! git diff --cached --quiet; then
+            git commit -m "chore: bump manifest version to $NEW_VERSION"
+            git push origin HEAD:main
+          fi
+
+      - name: Release notes and changelog
+        run: |
+          PREV_TAG="$(git describe --tags --abbrev=0 --match 'v*' 2>/dev/null || true)"
+          PREV_TAG="$PREV_TAG" node .github/actions/release-notes.mjs
+
+      - name: Bundle lsx_lib.zip
+        run: |
+          mkdir -p dist/lsx_lib/web
+          cp fxmanifest.lua init.lua schema.json README.md CHANGELOG.md LICENSE NOTICE.md dist/lsx_lib/
+          cp -r src bridge locales modules dist/lsx_lib/
+          cp -r web/build dist/lsx_lib/web/
+          cd dist && zip -qr ../lsx_lib.zip lsx_lib
+
+      - name: Publish the release
+        run: |
+          gh release create "v$NEW_VERSION" lsx_lib.zip \
+            --title "lsx_lib $NEW_VERSION" \
+            --notes-file release-notes.md \
+            --target "$(git rev-parse HEAD)" \
+            --latest
+        env:
+          GH_TOKEN: ${{ github.token }}

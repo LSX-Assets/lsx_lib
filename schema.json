@@ -1,0 +1,872 @@
+{
+  "x-managedElsewhere": [
+    "bridging",
+    "access",
+    "logger.local",
+    "logger.routes",
+    "basic.languagePrompted"
+  ],
+  "x-label": "Shared Settings",
+  "x-icon": "library",
+  "x-shared": true,
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "description": "lsx_lib library-level settings. Controls global theming, localization, and other shared defaults used by every resource that depends on lsx_lib.",
+  "properties": {
+    "basic": {
+      "x-icon": "sliders-horizontal",
+      "type": "object",
+      "description": "Core lsx_lib settings — server identity, language/currency, and debug.",
+      "properties": {
+        "serverName": {
+          "type": "string",
+          "default": "My Server",
+          "x-renamedFrom": "branding.serverName",
+          "x-autoDefault": [
+            "sv_projectName",
+            "sv_hostname"
+          ],
+          "description": "Server branding string displayed in NUIs that surface a server name. Detected from your server.cfg (sv_projectName, then sv_hostname) until you type something here."
+        },
+        "primaryIdentifier": {
+          "type": "string",
+          "default": "license",
+          "x-renamedFrom": "advanced.primaryIdentifier",
+          "enum": [
+            "license",
+            "license2",
+            "steam",
+            "discord",
+            "fivem",
+            "ip"
+          ],
+          "description": "Which player identifier lsx_lib uses as the primary lookup key. Default 'license' works for the vast majority of servers — only change if your framework or txAdmin setup uses a different identifier."
+        },
+        "language": {
+          "type": "string",
+          "default": "en",
+          "x-renamedFrom": "localization.language",
+          "enum": [
+            "en",
+            "de",
+            "es",
+            "fr",
+            "it",
+            "ja",
+            "lt",
+            "nl",
+            "no",
+            "pl",
+            "pt",
+            "zh-CN",
+            "zh-TW"
+          ],
+          "x-enumLabels": {
+            "en": "English (en)",
+            "de": "Deutsch (de)",
+            "es": "Español (es)",
+            "fr": "Français (fr)",
+            "it": "Italiano (it)",
+            "ja": "日本語 (ja)",
+            "lt": "Lietuvių (lt)",
+            "nl": "Nederlands (nl)",
+            "no": "Norsk (no)",
+            "pl": "Polski (pl)",
+            "pt": "Português (pt)",
+            "zh-CN": "简体中文 (zh-CN)",
+            "zh-TW": "繁體中文 (zh-TW)"
+          },
+          "description": "Locale code used when resolving strings from /locales. A language with no matching file there falls back to English."
+        },
+        "languagePrompted": {
+          "type": "boolean",
+          "default": false,
+          "title": "Language Prompted",
+          "description": "Whether an admin has been asked to pick a language yet. Set by the one-time chooser, never edited by hand — the value of `language` cannot answer this on its own, because a server sitting on the English default is indistinguishable from one that chose English."
+        },
+        "weightUnit": {
+          "type": "string",
+          "default": "lb",
+          "enum": ["kg", "lb"],
+          "x-enumLabels": { "kg": "Kilograms (kg)", "lb": "Pounds (lb)" },
+          "x-adoptFromConsumers": true,
+          "title": "Weight Unit",
+          "description": "Unit every LSX script displays weights in. Shared here rather than set per script, so a server that runs in kilograms says kilograms everywhere."
+        },
+        "distanceUnit": {
+          "type": "string",
+          "default": "m",
+          "enum": ["m", "ft"],
+          "x-enumLabels": { "m": "Metres (m)", "ft": "Feet (ft)" },
+          "x-adoptFromConsumers": true,
+          "title": "Distance Unit",
+          "description": "Unit every LSX script displays distances in."
+        },
+        "currency": {
+          "type": "string",
+          "default": "$",
+          "x-renamedFrom": "localization.currency",
+          "description": "Currency symbol prefixed to money values rendered by lsx_lib UIs."
+        },
+        "debug": {
+          "type": "boolean",
+          "default": false,
+          "x-renamedFrom": "advanced.debug",
+          "description": "Enables verbose lsx_lib debug logging and the opt-in SQL/hitch diagnostics (writes lsx_lib/diag_report.json). Leave off in production; turn it on and restart lsx_lib to capture a report when investigating a performance issue."
+        }
+      }
+    },
+    "appearance": {
+      "x-icon": "palette",
+      "type": "object",
+      "description": "Global UI theme and branding shared across every lsx_lib-powered NUI.",
+      "properties": {
+        "primaryColor": {
+          "x-control": "mantineColor",
+          "type": "string",
+          "default": "lsx",
+          "description": "Mantine palette key used as the UI primary colour. 'lsx' is the LSX green; 'custom' uses the palette defined below."
+        },
+        "primaryShade": {
+          "x-control": "shade",
+          "type": "number",
+          "default": 5,
+          "minimum": 0,
+          "maximum": 9,
+          "description": "Mantine shade index (0 lightest, 9 darkest) picked from the primary palette for buttons, borders, and accents."
+        },
+        "customTheme": {
+          "type": "array",
+          "description": "Ten-colour palette (light to dark) used when primaryColor is set to 'custom'. Provide exactly ten hex codes ordered from lightest shade to darkest.",
+          "default": [
+            "#f8edff",
+            "#e9d9f6",
+            "#d0b2e8",
+            "#b588da",
+            "#9e65cf",
+            "#914ec8",
+            "#8a43c6",
+            "#7734af",
+            "#692d9d",
+            "#5c258b"
+          ]
+        }
+      }
+    },
+    "bridging": {
+      "x-icon": "plug",
+      "type": "object",
+      "description": "Pick which third-party resource (framework, inventory, target, etc.) and which UI library lsx_lib should bridge to. Resource bridges default to 'auto' so lsx_lib detects whatever's installed; UI bridges default to 'ox_lib' so servers running ox get its native UI without any extra setup. Set any value explicitly to override autodetect.",
+      "properties": {
+        "framework": {
+          "type": "string",
+          "default": "auto",
+          "enum": [
+            "auto",
+            "es_extended",
+            "qbx_core",
+            "qb-core",
+            "ND_Core"
+          ],
+          "description": "Server framework lsx_lib reads player data from.",
+          "x-bridgeGroup": "bridge"
+        },
+        "inventory": {
+          "type": "string",
+          "default": "auto",
+          "enum": [
+            "auto",
+            "one_inventory",
+            "qs-inventory",
+            "codem-inventory",
+            "tgiann-inventory",
+            "devix-inventory",
+            "bp_inventory",
+            "mf-inventory",
+            "core_inventory",
+            "ak47_inventory",
+            "ox_inventory",
+            "qb-inventory"
+          ],
+          "description": "Inventory system used for item lookups, give/remove, and image paths.",
+          "x-bridgeGroup": "bridge"
+        },
+        "itemImgPath": {
+          "type": "string",
+          "default": "auto",
+          "x-renamedFrom": "branding.itemImgPath",
+          "description": "Inventory image path used by lsx_lib UIs. 'auto' resolves from the detected inventory; override with a full nui://… or CDN URL.",
+          "x-bridgeGroup": "bridge"
+        },
+        "target": {
+          "type": "string",
+          "default": "auto",
+          "enum": [
+            "auto",
+            "ox_target",
+            "qb-target",
+            "q-target",
+            "bt-target"
+          ],
+          "description": "Targeting system for entity interactions.",
+          "x-bridgeGroup": "bridge"
+        },
+        "interact": {
+          "type": "string",
+          "default": "auto",
+          "enum": [
+            "auto",
+            "redm-uiprompt",
+            "sleepless_interact",
+            "interact"
+          ],
+          "description": "Interact-prompt system used as the alternative to target-based interactions.",
+          "x-bridgeGroup": "bridge"
+        },
+        "time": {
+          "type": "string",
+          "default": "auto",
+          "enum": [
+            "auto",
+            "av_weather",
+            "cd_easytime",
+            "qb-weathersync",
+            "Renewed-Weathersync",
+            "vSync",
+            "wasabi_wheather"
+          ],
+          "description": "Weather/time sync resource.",
+          "x-bridgeGroup": "bridge"
+        },
+        "keys": {
+          "type": "string",
+          "default": "auto",
+          "enum": [
+            "auto",
+            "cd_garage",
+            "MrNewbVehicleKeys",
+            "t1ger_keys",
+            "okokGarage",
+            "qb-vehiclekeys",
+            "qbx_vehiclekeys",
+            "qs-vehiclekeys",
+            "Renewed-Vehiclekeys",
+            "vehicles_keys",
+            "wasabi_carlock",
+            "ludaro-keys"
+          ],
+          "description": "Vehicle keys / lockpicking system.",
+          "x-bridgeGroup": "bridge"
+        },
+        "fuel": {
+          "type": "string",
+          "default": "auto",
+          "enum": [
+            "auto",
+            "cdn-fuel",
+            "LegacyFuel",
+            "ox_fuel",
+            "ps-fuel",
+            "Renewed-Fuel",
+            "ti_fuel",
+            "x-fuel",
+            "wasabi_fuel",
+            "okokGasStation",
+            "qs-fuelstations"
+          ],
+          "description": "Vehicle fuel system.",
+          "x-bridgeGroup": "bridge"
+        },
+        "phone": {
+          "type": "string",
+          "default": "auto",
+          "enum": [
+            "auto",
+            "lb-phone",
+            "qb-phone",
+            "gksphone",
+            "high-phone",
+            "npwd"
+          ],
+          "description": "Phone resource (used for messages, mail, etc.).",
+          "x-bridgeGroup": "bridge"
+        },
+        "garage": {
+          "type": "string",
+          "default": "auto",
+          "enum": [
+            "auto",
+            "jg-advancedgarages",
+            "jg-garages",
+            "cd_garage",
+            "okokGarage",
+            "esx_garage",
+            "loaf_garage",
+            "wasabi_garage",
+            "renewed-garage",
+            "qb-garages"
+          ],
+          "description": "Garage / vehicle storage system (used by lib.garage.addVehicle).",
+          "x-bridgeGroup": "bridge"
+        },
+        "clothing": {
+          "type": "string",
+          "default": "auto",
+          "enum": [
+            "auto",
+            "esx_skin",
+            "qb-clothing",
+            "rcore_clothing",
+            "illenium-appearance",
+            "fivem-appearance",
+            "tgiann-clothing"
+          ],
+          "description": "Clothing / character appearance system.",
+          "x-bridgeGroup": "bridge"
+        },
+        "ambulance": {
+          "type": "string",
+          "default": "auto",
+          "enum": [
+            "auto",
+            "qb-ambulancejob",
+            "wasabi_ambulance",
+            "core_ambulance"
+          ],
+          "description": "Ambulance / death + revive system.",
+          "x-bridgeGroup": "bridge"
+        },
+        "prison": {
+          "type": "string",
+          "default": "auto",
+          "enum": [
+            "auto",
+            "qb-prison",
+            "rcore_prison",
+            "wasabi_jail"
+          ],
+          "description": "Prison / jail system.",
+          "x-bridgeGroup": "bridge"
+        },
+        "dispatch": {
+          "type": "string",
+          "default": "auto",
+          "enum": [
+            "auto",
+            "bub_mdt",
+            "cd_dispatch",
+            "linden_outlawalert",
+            "qs_dispatch",
+            "ps-dispatch",
+            "tk_dispatch"
+          ],
+          "description": "Dispatch / police alert system.",
+          "x-bridgeGroup": "bridge"
+        },
+        "doorlock": {
+          "type": "string",
+          "default": "auto",
+          "enum": [
+            "auto",
+            "ox_doorlock",
+            "qb-doorlock",
+            "nui_doorlock",
+            "doors_creator"
+          ],
+          "description": "Doorlock system.",
+          "x-bridgeGroup": "bridge"
+        },
+        "skills": {
+          "type": "string",
+          "default": "auto",
+          "enum": [
+            "auto",
+            "sd_skills",
+            "evolent_skills",
+            "core_skills",
+            "B1-skillz",
+            "skill_system_v1.5",
+            "skillsystem_v3",
+            "boii_skills",
+            "skillsystem_v2",
+            "ot_skill_system"
+          ],
+          "description": "Skills / progression system.",
+          "x-bridgeGroup": "bridge"
+        },
+        "housing": {
+          "type": "string",
+          "default": "auto",
+          "enum": [
+            "auto",
+            "qs-housing",
+            "rtx_housing",
+            "bcs_housing",
+            "origen_housing"
+          ],
+          "description": "Player housing system.",
+          "x-bridgeGroup": "bridge"
+        },
+        "notify": {
+          "type": "string",
+          "default": "ox_lib",
+          "enum": [
+            "ox_lib",
+            "lsx_lib"
+          ],
+          "description": "Provider for lib.notify (toast notifications).",
+          "x-bridgeGroup": "interface"
+        },
+        "progress": {
+          "type": "string",
+          "default": "ox_lib",
+          "enum": [
+            "ox_lib",
+            "lsx_lib"
+          ],
+          "description": "Provider for lib.progressBar / lib.progressCircle.",
+          "x-bridgeGroup": "interface"
+        },
+        "showTextUI": {
+          "type": "string",
+          "default": "ox_lib",
+          "enum": [
+            "ox_lib",
+            "lsx_lib"
+          ],
+          "description": "Provider for lib.showTextUI / hideTextUI.",
+          "x-bridgeGroup": "interface"
+        },
+        "contextMenu": {
+          "type": "string",
+          "default": "ox_lib",
+          "enum": [
+            "ox_lib",
+            "lsx_lib"
+          ],
+          "description": "Provider for lib.registerContext / showContext.",
+          "x-bridgeGroup": "interface"
+        },
+        "alertDialog": {
+          "type": "string",
+          "default": "ox_lib",
+          "enum": [
+            "ox_lib",
+            "lsx_lib"
+          ],
+          "description": "Provider for lib.alertDialog (confirm/cancel modals).",
+          "x-bridgeGroup": "interface"
+        },
+        "inputDialog": {
+          "type": "string",
+          "default": "ox_lib",
+          "enum": [
+            "ox_lib",
+            "lsx_lib"
+          ],
+          "description": "Provider for lib.inputDialog (form-style prompts).",
+          "x-bridgeGroup": "interface"
+        }
+      }
+    },
+    "groups": {
+      "x-icon": "users",
+      "type": "object",
+      "description": "Defaults for the lsx_groups system (party invites, max members, log-off kicks).",
+      "properties": {
+        "maxMembers": {
+          "type": "number",
+          "default": 5,
+          "minimum": 1,
+          "maximum": 50,
+          "description": "Maximum group size."
+        },
+        "maxDistanceInvite": {
+          "type": "number",
+          "default": 5,
+          "minimum": 1,
+          "maximum": 100,
+          "description": "Max metres between players for an invite to land."
+        },
+        "inviteValidTime": {
+          "type": "number",
+          "default": 5,
+          "minimum": 1,
+          "maximum": 60,
+          "description": "Minutes an outstanding invite stays valid before expiring."
+        },
+        "maxLogOffTime": {
+          "type": "number",
+          "default": 5,
+          "minimum": 1,
+          "maximum": 60,
+          "description": "Minutes a player can stay offline before being auto-kicked from their group."
+        }
+      }
+    },
+    "access": {
+      "x-icon": "shield",
+      "type": "object",
+      "x-serverOnly": true,
+      "description": "Who (besides master admins) can open & edit lsx_lib's OWN config — additive on top of the lsx_lib_master_group convar, never removes master. WARNING: lsx_lib's config holds secrets (Discord bot token, logger credentials); anyone granted here can see/edit them and grant others (but can NEVER make themselves master). Grant trusted co-admins only. x-serverOnly so the grant list never leaves the server.",
+      "default": {
+        "groups": [],
+        "identifiers": []
+      },
+      "properties": {
+        "groups": {
+          "type": "array",
+          "default": [],
+          "description": "ACE group names granted lsx_lib config access (checked via IsPlayerAceAllowed).",
+          "items": {
+            "type": "string"
+          }
+        },
+        "identifiers": {
+          "type": "array",
+          "default": [],
+          "description": "Specific players granted access — framework persistent id (citizenid on qb/qbx, license on esx), or a raw FiveM identifier (license:/discord:/...).",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "discord": {
+      "x-icon": "message-circle",
+      "type": "object",
+      "description": "Discord bot credentials used by lib.discord for role lookups, member queries, and any other Discord-backed feature across lsx_lib consumers. Leave blank to disable — features that need it will surface a friendly 'configure in /lsx_lib' message instead of silently failing.",
+      "properties": {
+        "botToken": {
+          "x-control": "secret",
+          "type": "string",
+          "default": "",
+          "x-serverOnly": true,
+          "description": "Bot token for the Discord application that lib.discord authenticates as. NEVER leaves the server — stripped from any client-bound snapshot."
+        },
+        "guildId": {
+          "type": "string",
+          "default": "",
+          "description": "Guild (Discord server) ID lib.discord targets by default. Used for role lists, member lookups, etc."
+        }
+      }
+    },
+    "logger": {
+      "x-icon": "scroll-text",
+      "type": "object",
+      "description": "External log backend used by lib.logger across every lsx_lib consumer. Runs entirely inside lsx_lib's own VM — consumers emit through an export, so backend secrets never enter a consumer's memory image. Set service to 'off' to disable external logging (resources still fire their own Discord webhooks independently). Legacy `lsx:logger` + per-backend convars still work as a fallback when service is 'off'/unset.",
+      "properties": {
+        "service": {
+          "type": "string",
+          "enum": [
+            "off",
+            "datadog",
+            "loki",
+            "fivemanage"
+          ],
+          "default": "off",
+          "description": "External log backend. off = Discord webhooks only (per-resource)."
+        },
+        "hostname": {
+          "type": "string",
+          "default": "",
+          "x-autoDefault": [
+            "sv_projectName",
+            "sv_hostname"
+          ],
+          "description": "Hostname label attached to every log line. Detected from your server.cfg until you type something here."
+        },
+        "loki": {
+          "type": "object",
+          "description": "Grafana Loki push credentials. Only used when service = loki.",
+          "properties": {
+            "endpoint": {
+              "type": "string",
+              "default": "",
+              "description": "Loki base URL (https:// is assumed if no scheme). The /loki/api/v1/push path is appended automatically."
+            },
+            "user": {
+              "type": "string",
+              "default": "",
+              "description": "Basic-auth username. Leave blank for an unauthenticated push endpoint."
+            },
+            "password": {
+              "x-control": "secret",
+              "type": "string",
+              "default": "",
+              "x-serverOnly": true,
+              "description": "Basic-auth password / API key. Server-side only — never sent to clients."
+            },
+            "tenant": {
+              "type": "string",
+              "default": "",
+              "description": "Optional X-Scope-OrgID tenant header for multi-tenant Loki."
+            }
+          },
+          "x-enabledWhen": {
+            "path": "logger.service",
+            "equals": "loki"
+          }
+        },
+        "datadog": {
+          "type": "object",
+          "description": "Datadog logs intake credentials. Only used when service = datadog.",
+          "properties": {
+            "apiKey": {
+              "x-control": "secret",
+              "type": "string",
+              "default": "",
+              "x-serverOnly": true,
+              "description": "Datadog API key (DD-API-KEY). Server-side only — never sent to clients."
+            },
+            "site": {
+              "type": "string",
+              "default": "datadoghq.com",
+              "description": "Datadog site (e.g. datadoghq.com, datadoghq.eu, us5.datadoghq.com)."
+            }
+          },
+          "x-enabledWhen": {
+            "path": "logger.service",
+            "equals": "datadog"
+          }
+        },
+        "fivemanage": {
+          "type": "object",
+          "description": "Fivemanage logs credentials. Only used when service = fivemanage.",
+          "properties": {
+            "apiKey": {
+              "x-control": "secret",
+              "type": "string",
+              "default": "",
+              "x-serverOnly": true,
+              "description": "Fivemanage API key (Authorization). Server-side only — never sent to clients."
+            }
+          },
+          "x-enabledWhen": {
+            "path": "logger.service",
+            "equals": "fivemanage"
+          }
+        },
+        "local": {
+          "type": "object",
+          "description": "Keep log lines in this server's own database, so the Logs page has something to show. Independent of the external services above - both can run, or neither.",
+          "properties": {
+            "enabled": {
+              "type": "boolean",
+              "default": true,
+              "x-restartRequired": false,
+              "description": "Keep every log line in a `lsx_logs` table, which is what the Logs page reads. On by default - this is where logs live now. Turning it off leaves the page empty."
+            },
+            "retentionDays": {
+              "type": "integer",
+              "default": 14,
+              "minimum": 1,
+              "maximum": 365,
+              "description": "How long a log line is kept. Older rows are deleted hourly, in slices, so a long-idle server does not lock the table catching up.",
+              "x-enabledWhen": {
+                "path": "logger.local.enabled",
+                "equals": true
+              }
+            }
+          }
+        },
+        "routes": {
+          "type": "array",
+          "x-arrayKey": "id",
+          "x-serverOnly": true,
+          "description": "Send matching log lines on to Discord, as well as keeping them here. Pick a channel if you have a bot set up, or paste a webhook URL. Leave a filter empty to mean 'any' - a redirect with no filters at all forwards everything.",
+          "x-rowOrder": [
+            "label",
+            "enabled",
+            "kind",
+            "channelId",
+            "url",
+            "resources",
+            "events",
+            "levels"
+          ],
+          "x-rowControls": {
+            "url": {
+              "control": "secret"
+            },
+            "resources": "tags",
+            "events": "tags",
+            "levels": {
+              "control": "enumList",
+              "options": [
+                {
+                  "value": "info",
+                  "label": "Info"
+                },
+                {
+                  "value": "warn",
+                  "label": "Warning"
+                },
+                {
+                  "value": "error",
+                  "label": "Error"
+                }
+              ]
+            },
+            "channelId": {
+              "control": "discordChannel"
+            },
+            "label": {
+              "action": {
+                "label": "Test",
+                "callback": "testLogRoute",
+                "icon": "send",
+                "sendSection": true
+              }
+            },
+            "kind": {
+              "control": "redirectKind"
+            }
+          },
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string",
+                "x-generateId": "r"
+              },
+              "label": {
+                "type": "string",
+                "title": "Name",
+                "description": "What to call this redirect. Only shown to you."
+              },
+              "enabled": {
+                "type": "boolean",
+                "title": "Active",
+                "description": "Turn off to stop forwarding without deleting it.",
+                "default": true
+              },
+              "url": {
+                "type": "string",
+                "x-enabledWhen": {
+                  "path": "kind",
+                  "equals": "webhook"
+                },
+                "title": "Webhook URL",
+                "description": "From the Discord channel: Edit Channel > Integrations > Webhooks."
+              },
+              "resources": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "title": "Scripts",
+                "description": "Only forward lines from these scripts. Empty means all of them."
+              },
+              "events": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "title": "Events",
+                "description": "Only forward these events. Empty means all of them."
+              },
+              "levels": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "title": "Levels",
+                "description": "Only forward these levels. Empty means all of them."
+              },
+              "channelId": {
+                "type": "string",
+                "description": "Post to this Discord channel as your bot. Needs a bot token and guild set up under Discord. Leave empty to use a webhook URL instead.",
+                "x-enabledWhen": {
+                  "path": "kind",
+                  "equals": "channel"
+                },
+                "title": "Channel"
+              },
+              "kind": {
+                "type": "string",
+                "default": "webhook",
+                "description": "How this redirect reaches Discord.",
+                "title": "Send using"
+              }
+            }
+          },
+          "default": [],
+          "x-rowTabs": [
+            {
+              "id": "destination",
+              "label": "Where it goes",
+              "icon": "send",
+              "keys": [
+                "label",
+                "enabled",
+                "kind",
+                "channelId",
+                "url"
+              ]
+            },
+            {
+              "id": "filters",
+              "label": "What to send",
+              "icon": "filter",
+              "keys": [
+                "resources",
+                "events",
+                "levels"
+              ]
+            }
+          ],
+          "title": "Redirects",
+          "x-validateRows": {
+            "label": [
+              {
+                "must": {
+                  "path": "self",
+                  "isSet": true
+                },
+                "message": "Give this redirect a name so you can tell them apart"
+              }
+            ],
+            "url": [
+              {
+                "when": {
+                  "path": "kind",
+                  "equals": "webhook"
+                },
+                "must": {
+                  "path": "self",
+                  "isSet": true
+                },
+                "message": "Paste the webhook URL from the Discord channel"
+              },
+              {
+                "when": {
+                  "path": "kind",
+                  "equals": "webhook"
+                },
+                "must": {
+                  "path": "self",
+                  "minLength": 40
+                },
+                "message": "That does not look like a Discord webhook URL"
+              }
+            ],
+            "channelId": [
+              {
+                "when": {
+                  "path": "kind",
+                  "equals": "channel"
+                },
+                "must": {
+                  "path": "self",
+                  "isSet": true
+                },
+                "message": "Pick the channel to post in"
+              }
+            ]
+          }
+        }
+      }
+    }
+  }
+}

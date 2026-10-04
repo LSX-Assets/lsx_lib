@@ -1,0 +1,214 @@
+html {
+  color-scheme: normal !important;
+}
+
+body {
+  margin: 0;
+  background: none !important;
+  overflow: hidden !important;
+  font-family: 'LSX Sans', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  height: 100vh;
+}
+
+#root {
+  background: none !important;
+  overflow-y: hidden !important;
+  height: 100%
+}
+
+code {
+
+  overflow: hidden;
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}
+
+/* Mantine v8 wraps input labels in <label> with display:inline-block by
+   default — that breaks width:100% on InfoLabel's inner Flex (the info
+   icon stops aligning to the right). Force the label to fill the row. */
+.mantine-InputWrapper-label {
+  display: block !important;
+  width: 100% !important;
+}
+
+
+
+/* ── Script Studio ─────────────────────────────────────────────────────────
+   The settings pane is a long scroll, so its bar has to be grabbable. The
+   global 2px thumb suits small popovers but not this, hence a scoped rule
+   rather than widening every scrollbar in lsx_lib. */
+.studio-scroll::-webkit-scrollbar {
+  width: 10px;
+}
+
+.studio-scroll::-webkit-scrollbar-track {
+  background: transparent;
+  margin: 0;
+}
+
+.studio-scroll::-webkit-scrollbar-thumb {
+  /* padding-box + transparent border insets the thumb without shrinking the
+     hit area, so it stays easy to grab while looking slim */
+  background: var(--mantine-primary-color-8);
+  background-clip: padding-box;
+  border: 2px solid transparent;
+  border-radius: 0;
+}
+
+.studio-scroll::-webkit-scrollbar-thumb:hover {
+  background: var(--mantine-primary-color-6);
+  background-clip: padding-box;
+}
+
+.studio-scroll::-webkit-scrollbar-thumb:active {
+  background: var(--mantine-primary-color-5);
+  background-clip: padding-box;
+}
+
+
+/* ── Portal layering ───────────────────────────────────────────────────────
+   Mantine portals its dropdowns, popovers and tooltips to <body> at
+   --mantine-z-index-popover, which defaults to 300. Script Studio's panel sits
+   at 9990 and its modals at 10100-10300, so every portalled dropdown rendered
+   BEHIND them - including library components like FiveMKeyBindInput,
+   ModelSelect and AccountSelect, which expose no z-index prop of their own.
+
+   Raising the variables is the only fix that reaches those, and it keeps every
+   consumer of lsx_lib's NUI consistent instead of each surface patching it. */
+:root {
+  --mantine-z-index-modal: 10800;
+  --mantine-z-index-popover: 10800;
+  --mantine-z-index-overlay: 10700;
+  --mantine-z-index-max: 11000;
+}
+
+/*
+ * Dropdowns must clear the Script Studio window.
+ *
+ * The panel sits at z-index 9990. Mantine portals a dropdown to <body> with an
+ * inline z-index of 300, so any select that does not pass its own
+ * comboboxProps opens BEHIND the whole window. Most of ours do pass it - but
+ * lsx-ui's AccountSelect takes a closed prop union with no way in, so
+ * the fix cannot live at the call site.
+ *
+ * !important because the value it beats is an inline style. Nothing in this
+ * NUI is meant to sit above an open dropdown, so raising all of them is safe.
+ */
+.mantine-Combobox-dropdown,
+.mantine-Select-dropdown,
+.mantine-MultiSelect-dropdown,
+.mantine-Autocomplete-dropdown {
+  z-index: 10800 !important;
+}
+
+/*
+ * A scrolling column must not squash its rows.
+ *
+ * Flex children shrink before their container scrolls, so a list past a certain
+ * length compresses every row instead of getting longer — the change history
+ * did exactly that once there were enough saves in it. Rows are a fixed size;
+ * the container is the thing that scrolls.
+ */
+.studio-scroll > * {
+  flex-shrink: 0;
+}
+
+/* Inputs that come from lsx-ui with a closed prop type.
+   They are Mantine underneath but arrive with their own defaults, so without
+   this they sit visibly apart from the panel's own fields. The values come
+   from the panel itself (see useInputCssVars), never guessed here. */
+.studio-native .mantine-Input-input,
+.studio-native .mantine-MultiSelect-input,
+.studio-native .mantine-Select-input {
+  background: var(--studio-input-bg);
+  border: var(--studio-input-border);
+  border-radius: var(--studio-input-radius);
+  min-height: var(--studio-input-height);
+  height: var(--studio-input-height);
+  font-family: 'LSX Sans Medium';
+  font-size: var(--studio-input-font-size);
+  padding-inline: var(--studio-input-padding);
+  color: rgba(255, 255, 255, 0.9);
+}
+
+/* The popup half, for the inputs whose props are closed.
+   A dropdown is PORTALLED to <body>, so no wrapper class can reach it - it
+   has to be matched globally. The values are the panel's own (published on
+   its root by useInputCssVars), and the rules no-op anywhere those variables
+   are not defined, so nothing outside the panel is touched. */
+.mantine-Combobox-dropdown,
+.mantine-Select-dropdown,
+.mantine-MultiSelect-dropdown,
+.mantine-Autocomplete-dropdown {
+  background: var(--studio-dropdown-bg, inherit);
+  border: var(--studio-dropdown-border, inherit);
+  border-radius: var(--studio-dropdown-radius, inherit);
+}
+
+.mantine-Combobox-option {
+  font-family: 'LSX Sans Medium';
+  border-radius: var(--studio-dropdown-radius, inherit);
+}
+
+/* A button that is busy, saying so. Used by the field-action button while its
+   request is in flight - a spinner rather than a disabled label, because some
+   of these post to a service and genuinely take a second. */
+@keyframes studio-spin {
+  to { transform: rotate(360deg); }
+}
+
+.studio-spin {
+  animation: studio-spin 0.9s linear infinite;
+}
+
+
+/* ── Screenshot mode ──────────────────────────────────────────────────────
+   Set `data-shot` on <html> and nothing behind the panel paints, so a capture
+   with an alpha channel comes out on genuine transparency.
+
+   The elements are KEPT, only their backgrounds go: cfx-react's LsxProvider
+   backdrop is also the layout parent, and the dim overlay is the flex box that
+   centres the panel - display:none on either collapses the thing being
+   photographed along with it. */
+html[data-shot],
+html[data-shot] body,
+html[data-shot] #root {
+  background: transparent !important;
+}
+
+html[data-shot] [style*="background-image"] {
+  background-image: none !important;
+}
+
+/* the dim behind the panel */
+html[data-shot] [data-studio-panel] {
+  box-shadow: none;
+}
+html[data-shot] div:has(> [data-studio-panel]) {
+  background-color: transparent !important;
+}
+
+/* ── Transparent capture ──────────────────────────────────────────────────
+   The screenshot script sets data-shot on <html>, and Playwright's
+   omitBackground only skips the browser's own white base — anything still
+   PAINTING a background is captured as normal.
+
+   LsxProvider paints a hotlinked backdrop behind everything so browser dev
+   looks like the game. Nothing in the panel's own code paints, so that
+   backdrop is the one thing standing between us and a clean alpha channel.
+
+   Kill the paint, KEEP the element: it is also the layout parent, and
+   display:none collapses the panel with it.
+   ------------------------------------------------------------------------ */
+html[data-shot], html[data-shot] body {
+  background: transparent !important;
+  background-image: none !important;
+}
+html[data-shot] body > div,
+html[data-shot] #root,
+html[data-shot] #root > div {
+  background-image: none !important;
+  background-color: transparent !important;
+}

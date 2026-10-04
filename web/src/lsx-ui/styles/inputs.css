@@ -1,0 +1,31 @@
+/*
+ * The LSX input surface.
+ *
+ * This lives in CSS rather than in the theme's `styles` object for one reason:
+ * SPECIFICITY. Mantine draws a field as `border: 1px solid var(--input-bd)` and
+ * focuses it by swapping that variable:
+ *
+ *     .m_8fb7ebe7:focus-within { --input-bd: var(--input-bd-focus); }
+ *
+ * A theme `styles` object is applied as an INLINE style, and inline wins over every
+ * stylesheet rule — so setting either `border` or `--input-bd` there silently killed
+ * the focus ring on every input in every consumer. The look was right; a focused
+ * field just looked identical to an idle one.
+ *
+ * Setting the variables from a single-class rule (specificity 0,1,0) leaves Mantine's
+ * `:focus-within` rule (0,2,0) free to win, so focus, error and disabled states go
+ * back to following the palette on their own.
+ */
+.mantine-Input-input {
+  --input-bg: rgba(242, 247, 244, 0.035);
+  --input-bd: rgba(86, 105, 95, 0.55);
+  --input-color: rgba(242, 247, 244, 0.88);
+  --input-height: 4vh;
+}
+
+/* Keyboard focus is the LSX focus ring: 2px of volt, 2px out, on everything. */
+.mantine-focus-auto:focus-visible,
+.mantine-focus-always:focus {
+  outline: 2px solid #F0FB63;
+  outline-offset: 2px;
+}

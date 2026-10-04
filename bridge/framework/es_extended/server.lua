@@ -1,0 +1,588 @@
+local cachedItems
+
+-- ESX legacy uses 'money' as the cash account name. Most cross-framework
+-- consumers (and our own scriptConfig defaults) pass 'cash'. Normalize so
+-- whichever convention the caller uses, we resolve to whatever the player
+-- actually has. If neither alias exists on the player, fall through to the
+-- raw name so the caller's error path still sees the original value.
+local ACCOUNT_ALIASES = {
+  cash  = 'money',
+  money = 'cash',
+}
+
+local function resolveAccount(ply, acc)
+  if ply.getAccount(acc) then return acc end
+  local alias = ACCOUNT_ALIASES[acc]
+  if alias and ply.getAccount(alias) then return alias end
+  return acc
+end
+
+-- Build a normalized item table from whichever ESX item source is available.
+local function sourceItems()
+  if not lib.FW then return nil end
+  -- Newer ESX: ESX.GetItems() returns { [name] = { label, weight } }
+  if type(lib.FW.GetItems) == 'function' then
+    local ok, items = pcall(lib.FW.GetItems)
+    if ok and type(items) == 'table' then return items end
+  end
+  -- Legacy ESX: ESX.Items table
+  if type(lib.FW.Items) == 'table' then return lib.FW.Items end
+  return nil
+end
+
+-- Cached owned_vehicles column set. ESX garage scripts disagree on which columns
+-- they add (`garage`, `type`, `stored`…); vanilla ESX + jg-advancedgarages have
+-- NO `garage` column, so blindly inserting it threw "Unknown column 'garage'"
+-- (reported by skrp on jg-garages). Detect the real columns once so lib.garage
+-- can insert only what exists.
+local ownedVehicleCols
+local function ownedVehicleColumns()
+  if ownedVehicleCols then return ownedVehicleCols end
+  ownedVehicleCols = {}
+  local ok, rows = pcall(function()
+    return exports.oxmysql:query_async(
+      "SELECT COLUMN_NAME AS c FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = 'owned_vehicles'")
+  end)
+  if ok and type(rows) == 'table' then
+    for _, r in ipairs(rows) do
+      local col = r.c or r.COLUMN_NAME
+      if col then ownedVehicleCols[col] = true end
+    end
+  end
+  return ownedVehicleCols
+end
+
+local bridge = {
+  ---@function lib.inventory.items
+  ---@description # Get all items from ESX. Cached per resource lifetime.
+  ---@return table<string, { name: string, label: string, weight: number, image: string }>
+  items = function()
+    if cachedItems then return cachedItems end
+    local src = sourceItems()
+    if not src then return {} end
+    local formatted = {}
+    for k, v in pairs(src) do
+      -- ESX entries vary: sometimes { label, weight }, sometimes a string label only
+      local entry = type(v) == 'table' and v or { label = tostring(v) }
+      formatted[k] = {
+        name   = entry.name or k,
+        label  = entry.label or entry.name or k,
+        weight = entry.weight or 0,
+        image  = lib.formatImagePath(entry.image or entry.name or k),
+      }
+    end
+    cachedItems = formatted
+    return formatted
+  end,
+
+  --- Look up a single item's record by name. ESX exposes its items as a
+  --- plain table (legacy `ESX.Items` or `ESX.GetItems()`); direct hash
+  --- access, no walk.
+  ---@param name string
+  ---@return table?
+  item = function(name)
+    local src = sourceItems()
+    if not src then return nil end
+    return src[name]
+  end,
+
+  canUseItem = function(item)
+    -- UsableItemsCallbacks is only populated by ESX's native usable-item
+    -- registry. Inventories that replace it (e.g. tgiann-inventory) leave the
+    -- table nil, so indexing it directly crashed the use path. Guard it.
+    local callbacks = lib.FW.UsableItemsCallbacks
+    if type(callbacks) ~= 'table' then return nil end
+    return callbacks[item]
+  end,
+
+  useableItem = function(item, cb)
+    -- Inventories layered over ESX (e.g. tgiann-inventory) fire the registered
+    -- callback WITHOUT an ESX-shaped item record, so `itemData` arrives nil and
+    -- handing that straight to the consumer throws (it indexes item.slot). Rather
+    -- than bail (which left the item unusable on those inventories — the tgiann
+    -- "rod won't equip" report), resolve the record through the INVENTORY bridge,
+    -- which speaks this inventory's own API (tgiann's GetItemByName, etc.). Keeps
+    -- the framework bridge inventory-agnostic — no hardcoded tgiann exports here.
+    return lib.FW.RegisterUsableItem(item, function(src, name, itemData)
+      if itemData == nil then
+        if lib.inventory and lib.inventory.getItemByName then
+          itemData = lib.inventory.getItemByName(src, item)
+        end
+        if itemData == nil then
+          lib.print.warn(('es_extended bridge: usable item "%s" fired without an item record and the inventory bridge could not resolve one; skipping use'):format(tostring(item)))
+          return
+        end
+      end
+      cb(src, itemData)
+    end)
+  end,
+
+  getItemLabel = function(item)
+    return lib.FW.GetItemLabel(item)
+  end,
+
+  --- Store a vehicle in the player's garage (ESX owned_vehicles). Schema-aware:
+  --- only writes columns the table actually has, so it can't die on a missing
+  --- `garage` column (jg-advancedgarages / vanilla ESX). Marks it stored so the
+  --- garage lists it. Backs lib.garage.addVehicle.
+  ---@param src number
+  ---@param opts { model?: string, plate: string, props?: table, garage?: string, owner?: string, vehicleType?: string }
+  ---@return string|false plate on success, false + reason otherwise
+  addVehicle = function(src, opts)
+    opts = opts or {}
+    local owner = opts.owner or (src and lib.player.identifier(src))
+    local plate = opts.plate
+    if not owner or not plate then return false, 'MissingOwnerOrPlate' end
+    local vehicle = type(opts.props) == 'table' and json.encode(opts.props)
+      or (type(opts.props) == 'string' and opts.props) or '{}'
+
+    local cols = ownedVehicleColumns()
+    local fields, holders, values = { 'owner', 'plate', 'vehicle' }, { '?', '?', '?' }, { owner, plate, vehicle }
+    local function maybe(col, val)
+      if cols[col] and val ~= nil then
+        fields[#fields + 1] = col
+        holders[#holders + 1] = '?'
+        values[#values + 1] = val
+      end
+    end
+    maybe('garage', opts.garage)
+    maybe('type', opts.vehicleType or 'car')
+    maybe('stored', 1)
+
+    local query = ('INSERT INTO owned_vehicles (%s) VALUES (%s)'):format(
+      table.concat(fields, ', '), table.concat(holders, ', '))
+    local ok, err = pcall(function() return exports.oxmysql:query_async(query, values) end)
+    if not ok then
+      lib.print.error(('lib.garage.addVehicle (esx): %s'):format(tostring(err)))
+      return false, 'InsertFailed'
+    end
+    return plate
+  end,
+
+  get = function(src)
+    return lib.FW.GetPlayerFromId(src)
+  end,
+
+  identifier = function(src)
+    local ply = lib.player.get(src)
+    if not ply then return nil end
+    return ply.identifier
+  end, 
+
+  name = function(src)
+    local ply = lib.player.get(src)
+    if not ply then return nil end
+    local raw = ply.getName() or ''
+    local firstName, lastName = raw:match("^(%S+)%s+(.+)$")
+    if not firstName then firstName = raw end
+    return firstName, lastName
+  end,
+
+  phoneNumber = function(src)
+    local ply = lib.player.get(src)
+    if not ply then return nil end
+    local result = exports.oxmysql:query_async("SELECT phone_number FROM users WHERE identifier = @identifier", {['@identifier'] = ply.identifier})
+    return result[1] or "No Number"
+  end, 
+
+  gender = function(src)
+    local ply = lib.player.get(src)
+    if not ply then return nil end
+    -- Another qb-core shape that was copied in: an ESX xPlayer has no
+    -- PlayerData.charinfo, so this always errored or returned nil. ESX keeps
+    -- sex in metadata on newer builds and in the users row on older ones, so
+    -- try both before giving up.
+    local sex = ply.getMeta and ply.getMeta('sex') or nil
+    if not sex then
+      local row = exports.oxmysql:single_async('SELECT sex FROM users WHERE identifier = ?', { ply.identifier })
+      sex = row and row.sex or nil
+    end
+    return sex or 'unknown'
+  end, 
+
+  deleteCharacter = function(src, citizenId)
+		local data = exports.oxmysql:query_async('SELECT * FROM users WHERE identifier LIKE ?', {'%'..citizenId..'%'})
+		for k,v in pairs(data) do
+
+			if v.identifier == citizenId then
+				exports.oxmysql:query_async('DELETE FROM `users` WHERE `identifier` = ?', {v.identifier})
+				break
+			end
+		end
+
+    return true 
+  end,
+
+  loginCharacter = function(src, citizenId, slot)
+    local rawId = lib.FW.GetIdentifier(src)
+    lib.FW.Players[rawId] = true
+    TriggerEvent("esx:onPlayerJoined", src, ('char%s'):format(slot))
+    return true
+  end,
+
+  logoutCharacter = function(src)
+    TriggerEvent("esx:playerLogout", src)
+  end,
+
+  createCharacter = function(src, data)
+    local charId = ("%s%s"):format('char', data.slot)
+    TriggerEvent('esx:onPlayerJoined', src, charId, {
+      firstname   = data.firstName,
+      lastname    = data.lastName,
+      dateofbirth = data.dob,
+      sex         = data.gender == 'male' and 1 or 0, 
+      height      = 180,
+    })
+    local rawId = lib.FW.GetIdentifier(src)
+    return ('%s:%s'):format(charId, rawId)
+  end, 
+
+  getCharacters = function(src)
+    local toRet = {}
+    local PREFIX = 'char'
+    local license = lib.player.getIdentifierType(src, lib.settings.primaryIdentifier)
+
+    if not license then
+      return {}
+    end
+
+    local result = exports.oxmysql:query_async([[
+      SELECT *
+      FROM users 
+      WHERE identifier LIKE ?
+    ]], { ("%s%%%s"):format(PREFIX, license:gsub(lib.settings.primaryIdentifier .. ':', '')) })
+
+    for k,v in pairs(result) do
+      v.position = json.decode(v.position) or {}
+      -- v.sex is sometimes 0 or 1 or 'm' or 'f', normalize it to 1 or 0
+      
+      local sex = tostring(v.sex):lower()
+      v.sex = (sex == "1" or sex == "m") and 1 or 0
+      local slot = v.identifier:match('char(%d+)')
+
+      table.insert(toRet, {
+        slot      = tonumber(slot),
+        firstName  = v.firstname,
+        lastName   = v.lastname,
+        dob        = v.dateofbirth,
+        lastpos    = vector4(v.position.x or 0.0, v.position.y or 0.0, v.position.z or 0.0, v.position.heading or 0.0), 
+        citizenId  = v.identifier, 
+        gender     = v.sex == 1 and 'male' or 'female',
+        accounts   = json.decode(v.accounts) or {},
+        metadata   = json.decode(v.metadata) or {},
+        disabled   = v.disabled,
+      })
+    end
+    return toRet
+  end,
+
+  getJob = function(src)
+    local ply = lib.player.get(src)
+    if not ply then return end
+    local rawJob = ply.job
+    local jobInfo = lib.FW.Jobs[rawJob.name] or {}
+    local gradeInfo = jobInfo.grades and jobInfo.grades[tostring(rawJob.grade)] or {}
+    local ret = {
+      name       = rawJob.name,
+      type       = rawJob.type,
+      label      = rawJob.label,
+      grade      = rawJob.grade,
+      gradeLabel = rawJob.grade_label,
+      
+      bankAuth   = rawJob.bankAuth,
+      isBoss     = rawJob.isboss,
+      duty       = false
+    }
+    return ret
+  end,
+
+  getGang = function(src)
+    return {
+      name      = 'none',
+      grade      = 0,
+    }
+  end,
+
+  setJob = function(src, name, rank)
+    local ply = lib.player.get(src)
+    if not ply then return nil end
+    ply.setJob(name, rank)
+  end,
+  
+  setDuty = function(src, duty)
+    local ply = lib.player.get(src)
+    if not ply then return nil end
+    ply.setJobDuty(duty)
+  end,
+
+  setPlayerData = function(src, _key, data)
+    local ply = lib.player.get(src)
+    if not ply then return nil end
+    -- ESX has no Functions table — that's a qb-core shape that was copied in
+    -- here, so this silently did nothing (or errored) on every ESX server.
+    return ply.set(_key, data)
+  end,
+
+  getPlayerData = function(src, _key)
+    local ply = lib.player.get(src)
+    if not ply then return nil end
+    -- Likewise `ply.PlayerData` does not exist on a modern ESX xPlayer, so this
+    -- always returned nil. The xPlayer IS the player data in ESX, so hand that
+    -- back; a specific key reads through to it.
+    if _key then return ply[_key] end
+    return ply
+  end,
+
+  setMetadata = function(src, _key, data)
+    local ply = lib.player.get(src)
+    if not ply then return nil end
+    assert(ply.setMeta, 'Player does not have setMeta function')
+    return ply.setMeta(_key, data)
+  end,
+
+  getMetadata = function(src, _key)
+    local ply = lib.player.get(src)
+    if not ply then return nil end
+    assert(ply.getMeta, 'Player does not have getMeta function')
+    return ply.getMeta(_key)
+  end,
+
+  jail = function()
+
+  end, 
+
+  getMoney = function(src, acc)
+    local ply = lib.player.get(src)
+    if not ply then return nil end
+    local account = ply.getAccount(resolveAccount(ply, acc))
+    return account and account.money or 0
+  end,
+
+  ---@param src number
+  ---@return table<string, number> every account and its balance
+  getAccounts = function(src)
+    local ply = lib.player.get(src)
+    if not ply then return {} end
+    local out = {}
+    for _, account in pairs(ply.getAccounts() or {}) do
+      if account.name then out[account.name] = account.money or 0 end
+    end
+    return out
+  end,
+
+  ---@param identifier string
+  ---@return number|nil server id, or nil when they're offline
+  getSourceFromIdentifier = function(identifier)
+    local ply = lib.FW.GetPlayerFromIdentifier(identifier)
+    return ply and ply.source or nil
+  end,
+
+  addMoney = function(src, acc, count, reason)
+    local ply = lib.player.get(src)
+    if not ply then return nil end
+    ply.addAccountMoney(resolveAccount(ply, acc), count)
+    return true
+  end,
+
+  removeMoney = function(src, acc, count, reason, force)
+    local ply = lib.player.get(src)
+    if not ply then return nil end
+    local account = ply.getAccount(resolveAccount(ply, acc))
+    if not account then return false, 'NoAccount' end
+    if not force and (account.money < count) then return false, 'NotEnoughMoney' end
+    ply.removeAccountMoney(resolveAccount(ply, acc), count)
+    return true
+  end,
+
+  setMoney = function(src, acc, count)
+    local ply = lib.player.get(src)
+    if not ply then return nil end
+    ply.setAccountMoney(resolveAccount(ply, acc), count)
+    return true
+  end,
+
+  hasLicense = function(src, license)
+    if not license then return true; end
+    local citizenId = lib.player.identifier(src)
+    assert(citizenId, 'Player does not have a citizenId')
+
+    local sql, params
+    if type(license) == 'table' then
+      local placeholders = {}
+      for i = 1, #license do
+          placeholders[i] = '?'
+      end
+      sql = ('SELECT 1 FROM `user_licenses` WHERE `type` IN (%s) AND `owner` = ? LIMIT 1'):format(table.concat(placeholders, ','))
+      table.insert(license, citizenId)
+      params = license
+    else
+      sql = 'SELECT 1 FROM `user_licenses` WHERE `type` = ? AND `owner` = ? LIMIT 1'
+      params = { license, citizenId }
+    end
+    local result = exports.oxmysql:query_async(sql, params)
+    return result and #result > 0
+  end,
+
+  getLicenses = function(src)
+    local citizenId = lib.player.identifier(src)
+    assert(citizenId, 'Player does not have a citizenId')
+
+    local result = exports.oxmysql:query_async('SELECT * FROM user_licenses WHERE owner = ?', { citizenId })
+    if not result or #result == 0 then return {} end
+
+    local licenses = {}
+    for _, license in ipairs(result) do
+      licenses[license.type] = {
+        name = license.name,
+        label = license.label,
+        status = license.status,
+      }
+    end
+    return licenses
+  end, 
+
+  hasGroup = function(src, group)
+    local myJob = lib.player.getJob(src)
+    local myGang = lib.player.getGang(src)
+    return lib.hasGroup(myJob, myGang, group)
+  end,
+
+  -- ESX has no first-class gang concept. The convention some servers follow
+  -- is to flag a job's `type` field as 'gang' — we honour that to surface
+  -- gangs separately, but it'll be empty on most installs. Jobs without
+  -- `type='gang'` are treated as jobs.
+  getJobs = function()
+    local jobs = (type(lib.FW.GetJobs) == 'function' and lib.FW.GetJobs()) or lib.FW.Jobs or {}
+    local result = {}
+    for name, j in pairs(jobs) do
+      local entry = type(j) == 'table' and j or { label = tostring(j) }
+      if entry.type ~= 'gang' then
+        local grades = {}
+        for gKey, g in pairs(entry.grades or {}) do
+          grades[#grades + 1] = {
+            grade    = tonumber(g.grade or gKey) or 0,
+            name     = g.name or '',
+            label    = g.label or g.name or '',
+            payment  = tonumber(g.salary) or 0,
+            isBoss   = false, -- ESX has no native boss flag
+            bankAuth = false,
+          }
+        end
+        table.sort(grades, function(a, b) return a.grade < b.grade end)
+        result[#result + 1] = {
+          name        = name,
+          label       = entry.label or name,
+          type        = 'job',
+          category    = entry.type,
+          whitelisted = entry.whitelisted,
+          grades      = grades,
+        }
+      end
+    end
+    table.sort(result, function(a, b) return (a.label or ''):lower() < (b.label or ''):lower() end)
+    return result
+  end,
+
+  getGangs = function()
+    local jobs = (type(lib.FW.GetJobs) == 'function' and lib.FW.GetJobs()) or lib.FW.Jobs or {}
+    local result = {}
+    for name, j in pairs(jobs) do
+      local entry = type(j) == 'table' and j or {}
+      if entry.type == 'gang' then
+        local grades = {}
+        for gKey, g in pairs(entry.grades or {}) do
+          grades[#grades + 1] = {
+            grade    = tonumber(g.grade or gKey) or 0,
+            name     = g.name or '',
+            label    = g.label or g.name or '',
+            payment  = tonumber(g.salary) or 0,
+            isBoss   = false,
+            bankAuth = false,
+          }
+        end
+        table.sort(grades, function(a, b) return a.grade < b.grade end)
+        result[#result + 1] = {
+          name   = name,
+          label  = entry.label or name,
+          type   = 'gang',
+          grades = grades,
+        }
+      end
+    end
+    table.sort(result, function(a, b) return (a.label or ''):lower() < (b.label or ''):lower() end)
+    return result
+  end,
+
+  getByPlate = function(plate)
+
+  end,
+}
+
+-- ── Player discovery ─────────────────────────────────────────────────────
+-- See qb-core/server.lua's matching section for the contract — same shape,
+-- same purpose. ESX stores first/last as discrete columns rather than JSON.
+
+bridge.getOnlinePlayers = function()
+  local result = {}
+  local players = lib.FW.GetPlayers() or {}
+  for i = 1, #players do
+    local src = players[i]
+    local ply = lib.FW.GetPlayerFromId(src)
+    if ply then
+      local raw = (ply.getName and ply.getName()) or ''
+      local firstName, lastName = raw:match('^(%S+)%s+(.+)$')
+      result[#result + 1] = {
+        id        = src,
+        citizenId = ply.identifier,
+        name      = GetPlayerName(src) or '',
+        charName  = ((firstName or raw) .. ' ' .. (lastName or '')):gsub('%s+$', ''),
+        online    = true,
+      }
+    end
+  end
+  return result
+end
+
+bridge.searchPlayers = function(opts)
+  opts = opts or {}
+  local rawSearch = opts.search or ''
+  local limit = math.min(tonumber(opts.limit) or 50, 50)
+  local searchLike = '%' .. rawSearch:lower() .. '%'
+
+  local onlineByIdent = {}
+  for _, p in ipairs(bridge.getOnlinePlayers()) do
+    onlineByIdent[p.citizenId] = p.id
+  end
+
+  local rows = MySQL.query.await([[
+    SELECT identifier, firstname, lastname
+    FROM users
+    WHERE LOWER(firstname) LIKE ?
+       OR LOWER(lastname) LIKE ?
+       OR LOWER(identifier) LIKE ?
+    LIMIT ?
+  ]], { searchLike, searchLike, searchLike, limit }) or {}
+
+  local result = {}
+  for i = 1, #rows do
+    local row = rows[i]
+    local first = row.firstname or ''
+    local last  = row.lastname or ''
+    local online = onlineByIdent[row.identifier]
+    result[#result + 1] = {
+      id        = online,
+      citizenId = row.identifier,
+      name      = '', -- ESX users table doesn't carry the steam/discord name; left blank
+      charName  = (first .. ' ' .. last):gsub('^%s+', ''):gsub('%s+$', ''),
+      online    = online ~= nil,
+    }
+  end
+  return result
+end
+
+if lib.onSettings then
+  lib.onSettings('itemImgPath', function() cachedItems = nil end)
+end
+
+return bridge
+
